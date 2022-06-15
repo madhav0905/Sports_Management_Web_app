@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Login Page</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"
+    />
+  </head>
+  <body>
+    <section class="hero is-centered is-fullheight">
+      <div class="hero-body">
+        <div class="container">
+          <div class="container is-max-width">
+            <div class="columns is-centered">
+              <div class="column is-5-tablet is-4-desktop is-4-widescreen">
+                <form action="/logg" method="post" class="box">
+                  <div class="columns is-mobile is-centered is-vcentered">
+                    <div class="column">
+                      <img src="/LOGO1.png" alt="" />
+                    </div>
+                    <div class="column">
+                      <span class="title is-italic">ABC Limited</span><br />
+                      <span class="subtitle is-italic">Enjoy Sports Event</span>
+                    </div>
+                  </div>
+
+                  <div class="field m-2">
+                    <label class="label">Username:</label>
+                    <p class="control has-icons-left has-icons-right">
+                      <input
+                        class="input"
+                        type="email"
+                        placeholder="Email"
+                        name="username"
+                        required
+                      />
+                      <span class="icon is-small is-left">
+                        <i class="fa fa-envelope"></i>
+                      </span>
+                    </p>
+                  </div>
+                  <div class="field mb-2">
+                    <label class="label">Password:</label>
+                    <p class="control has-icons-left">
+                      <input
+                        class="input"
+                        type="password"
+                        placeholder="Password"
+                        name="password"
+                        required
+                      />
+                      <span class="icon is-small is-left">
+                        <i class="fa fa-lock"></i>
+                      </span>
+                    </p>
+                  </div>
+                  <div class="field has-text-centered mb-2">
+                    <button class="button is-success">Login</button>
+                  </div>
+
+                  <div class="has-text-centered">
+                    <p class="is-italic">Dont have account?</p>
+                    <p class="is-italic"><a href="/register">Register</a></p>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+  <style>
+    body {
+      background-image: url("b3.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      opacity: 0.9;
+    }
+    img {
+      width: 9rem;
+      height: 7rem;
+      margin-left: 5%;
+    }
+  </style>
+</html>

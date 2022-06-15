@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Register Page</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"
+    />
+  </head>
+  <body>
+    <section class="hero is-centered m-0">
+      <div class="hero-body m-0">
+        <div class="container">
+          <div class="container m-0">
+            <div class="columns is-centered m-0">
+              <div
+                class="column is-4-tablet is-4-desktop is-4-widescreen m-0"
+                id="a"
+              >
+                <form action="/users/store" method="post" class="box">
+                  <div class="columns is-mobile is-centered is-vcentered">
+                    <div class="column m-0">
+                      <img src="/LOGO1.png" alt="" />
+                    </div>
+                    <div class="column m-0" id="m-header">
+                      <span class="title is-italic">ABC Limited</span><br />
+                      <span class="subtitle is-italic">Enjoy Sport Event</span>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label class="label">Username:</label>
+                    <p class="control has-icons-left has-icons-right">
+                      <input
+                        class="input"
+                        type="email"
+                        placeholder="Email"
+                        name="username"
+                        required
+                      />
+                      <span class="icon is-small is-left">
+                        <i class="fa fa-envelope"></i>
+                      </span>
+                    </p>
+                  </div>
+                  <div class="field mb-0">
+                    <label class="label">Password:</label>
+                    <p class="control has-icons-left">
+                      <input
+                        class="input"
+                        type="password"
+                        placeholder="Password"
+                        name="password"
+                        required
+                      />
+                      <span class="icon is-small is-left">
+                        <i class="fa fa-lock"></i>
+                      </span>
+                    </p>
+                  </div>
+
+                  <div class="field mb-0">
+                    <label class="label">Name:</label>
+                    <p class="control has-icons-left">
+                      <input
+                        class="input"
+                        type="text"
+                        placeholder="Name"
+                        name="first_name"
+                        required
+                      />
+                      <span class="icon is-small is-left">
+                        <i class="fa fa-user"></i>
+                      </span>
+                    </p>
+                  </div>
+                  <div class="field mb-0">
+                    <label class="label">Address</label>
+                    <p class="control has-icons-left">
+                      <input
+                        class="input"
+                        type="text"
+                        placeholder="Address"
+                        name="address"
+                        required
+                      />
+                      <span class="icon is-small is-left">
+                        <i class="fa fa-info-circle"></i>
+                      </span>
+                    </p>
+                  </div>
+                  <div class="field mb-0">
+                    <label class="label">Age</label>
+                    <p class="control has-icons-left">
+                      <input
+                        class="input"
+                        type="tel"
+                        placeholder="age"
+                        name="age"
+                        required
+                      />
+                      <span class="icon is-small is-left">
+                        <i class="fa fa-info-circle"></i>
+                      </span>
+                    </p>
+                  </div>
+                  <div class="field mb-0">
+                    <label class="label">Blood Group</label>
+                    <p class="control has-icons-left">
+                      <input
+                        class="input"
+                        type="text"
+                        placeholder="bloodgroup"
+                        name="bloodgroup"
+                        required
+                      />
+                      <span class="icon is-small is-left">
+                        <i class="fa fa-info-circle"></i>
+                      </span>
+                    </p>
+                  </div>
+
+                  <div class="field has-text-centered mb-0">
+                    <button class="button is-success">Register</button>
+                  </div>
+                  <div class="has-text-centered">
+                    <p class="is-italic">Have account already !</p>
+                    <p class="is-italic"><a href="/login">Login</a></p>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+  <style>
+    #a {
+      height: 98vh;
+    }
+
+    body {
+      background-image: url("b3.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      margin: 0%;
+      opacity: 0.9;
+    }
+    #m-header {
+      height: min-content;
+    }
+    img {
+      width: 8rem;
+      height: 7rem;
+
+      margin-left: 5%;
+    }
+  </style>
+</html>

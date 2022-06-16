@@ -3,15 +3,28 @@ const router = express.Router();
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const path = require("path");
+
+const mongoose = require("mongoose");
+//const { User, Post, Comment } = require("./Schemas/models");
+//const validate = require("./Schemas/validate");
+const coo = require("cookie-parser");
+router.use(coo("radno,e"));
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const bodyparser = require("body-parser"); //middleware
 const urlencoded = bodyparser.urlencoded({ extended: false });
-const mongoose = require("mongoose");
 const validate_joi = require("../validate/validate_register");
 const { User, Team, Tournament } = require("../Schemas/model");
 
 require("dotenv").config();
+router.get("/login", (req, res) => {
+  res.render("login", { msg: [] });
+});
+
+router.get("/register", (req, res) => {
+  res.render("register", { msg: [] });
+});
 router.get("/s", async (req, res) => {
   const obj = {
     user_name: "admin",
@@ -40,10 +53,7 @@ router.get("/s", async (req, res) => {
 });
 router.post("/store", [urlencoded], async (req, res) => {
   //validate
-  const blood_grp = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-", "O"];
-  if (!blood_grp.includes(req.body.bloodgroup)) {
-    return res.render("error", { msg: ["Unknown Blood Group"] });
-  }
+  console.log("reached post");
   const schema = Joi.object({
     user_name: Joi.string().min(5).required().email(),
     password: Joi.string().min(5).required(),
@@ -53,12 +63,41 @@ router.post("/store", [urlencoded], async (req, res) => {
     bloodgroup: Joi.string().required().min(1).max(3),
   });
   const check = validate_joi(schema, req.body);
+  const result = await User.find({ user_name: req.body.user_name });
 
-  if (check.error) {
-    console.log(check.error.details[0].message);
-    return res.render("error", { msg: [check.error.details[0].message] });
+  if (result.length) {
+    console.log("hi");
+
+    return res.render("register", {
+      msg: ["Already registered with this Email"],
+    });
   }
-  return res.send(req.body);
+  if (check.error) {
+    return res.render("register", {
+      msg: [check.error.details[0].message],
+    });
+  }
+
+  //save to database
+  //generate salt and hash it
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hashed = await bcrypt.hash(req.body.password, salt);
+    req.body.password = hashed;
+    const obj = new User(req.body);
+    await obj
+      .save()
+      .then(() => {
+        console.log("done");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } catch (err) {
+    return res.render("error", { msg: ["Server busy Please try again"] });
+  }
+  console.log("success to db");
+  return res.redirect("/auth/login");
 });
 router.post("/loggedin", [urlencoded], async (req, res) => {
   const schema = Joi.object({
@@ -73,6 +112,41 @@ router.post("/loggedin", [urlencoded], async (req, res) => {
     console.log(check.error.details[0].message);
     return res.render("error", { msg: [check.error.details[0].message] });
   }
+
+  try {
+    const obj = await User.findOne({ user_name: ms["user_name"] });
+    console.log(obj + "ahah");
+    if (obj) {
+      const decrypted_password = await bcrypt.compare(
+        ms["password"],
+        obj.password
+      );
+      try {
+        if (decrypted_password) {
+          const token = jwt.sign(
+            { _id: obj._id, role: obj.role },
+            process.env.secret
+          );
+
+          res.cookie("access_token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+          });
+
+          return res.send("/done");
+        } else {
+          return res.render("login", { msg: ["Incorrect Password"] });
+        }
+      } catch (err) {
+        return res.render("login", { msg: [err] });
+      }
+    } else {
+      return res.render("login", { msg: ["Wrong Email"] });
+    }
+  } catch (err) {
+    return res.render("login", { msg: ["Try again"] });
+  }
+
   return res.send(req.body);
 });
 module.exports = router;

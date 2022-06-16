@@ -13,7 +13,96 @@
     />
         <script>
     //VALIDATE
-    
+    function validate()
+    {event.preventDefault();
+      console.log("this is from function");
+    let point_to_p = document.getElementById("err_dis");
+    let form_pointer = document.getElementById("myform");
+    var check_username=form_pointer.elements['user_name'].value;
+    var check_password=form_pointer.elements['password'].value;
+    var check_name=form_pointer.elements['name'].value;
+    var check_address=form_pointer.elements['Address'].value;
+    var check_age=form_pointer.elements['age'].value;
+    console.log(check_username);
+if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(form_pointer.elements["user_name"].value))
+  {
+    point_to_p.style.visibility="hidden";
+  }
+  else
+  {
+  point_to_p.style.visibility="visible"
+  point_to_p.innerHTML="Invalid Email";
+    return false;
+  }
+  var passw=  /^[A-Za-z]\w{7,14}$/;
+if(passw.test(check_password))
+{
+point_to_p.style.visibility="hidden";
+}
+else
+{
+  point_to_p.style.visibility="visible"
+  point_to_p.innerHTML="Password requires at 7 letters and start with alphabets";
+ 
+return false;
+}
+console.log(check_name);
+if(check_name.length>5 && /^[a-zA-Z ]{5,30}$/.test(check_name))
+{
+point_to_p.style.visibility="hidden";
+
+
+
+
+}
+else
+{
+    point_to_p.style.visibility="visible"
+  point_to_p.innerHTML="Name should be atleast 5 letters and should ne only string";
+  return false;
+}
+
+age = parseInt(check_age, 10);
+
+//check if age is a number or less than or greater than 100
+if (isNaN(age) || age < 1 || age > 100)
+
+{
+    point_to_p.style.visibility="visible"
+  point_to_p.innerHTML="Age should be from 10 to 100";
+  return false;
+}
+else
+{
+  point_to_p.style.visibility="hidden";
+}
+if(/^[a-zA-Z0-9 ]{7,100}$/.test(check_address.trim()) && check_address.trim().length >7)
+{
+point_to_p.style.visibility="hidden";
+}
+else
+{
+  
+    point_to_p.style.visibility="visible"
+  point_to_p.innerHTML="Address should be atleast 7 letters ";
+  return false;
+}
+
+return true;
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
   </script>
     <link
       rel="stylesheet"
@@ -21,7 +110,6 @@
     />
   </head>
   <body>
-
     <section class="hero is-centered m-0">
       <div class="hero-body m-0">
         <div class="container">
@@ -30,8 +118,14 @@
               <div
                 class="column is-4-tablet is-4-desktop is-4-widescreen m-0"
                 id="a"
-              > 
-              <form action="/auth/store" method="post" class="box"  onSubmit="return validate();"id="myform"   >
+              >
+                <form
+                  action="/auth/store"
+                  method="post"
+                  class="box"
+                  onsubmit="return validate()"
+                  id="myform"
+                >
                   <div class="columns is-mobile is-centered is-vcentered">
                     <div class="column m-0">
                       <img src="/LOGO1.png" alt="" />
@@ -95,7 +189,7 @@
                         class="input"
                         type="text"
                         placeholder="Address"
-                        name="address"
+                        name="Address"
                         required
                       />
                       <span class="icon is-small is-left">
@@ -125,7 +219,7 @@
                     <label class="label">Blood Group<span id="star">*</span></label>
                          <div class="control has-icons-left"></p>
                     <div class="select">
-                      <select class="is-hovered" name="bloodgroup">
+                      <select class="is-hovered">
                         <option value="A+" selected>A Positive</option>
                         <option value="A-">A Negative</option>
 
@@ -145,22 +239,19 @@
                       </span>
                     </div>
                   </div>
-                       <div class="field mb-0">
+                  <div class="field mb-0">
                     <p class="has-text-red" style="color: red;" id="err_dis" ></p>
                   </div>
-                  <% msg.forEach(m => { %>
-                  <h2 class="has-text-danger"><%= m %></h2>
-                  <%})%>
+               
                   <div class="field has-text-centered mb-0">
             
-                    <input type="submit" class="button is-success" value="Submit">
+                    <input type="submit"  value="Submit">
                   </div>
-               
                   <div class="has-text-centered">
                     <p class="is-italic">Have account already !</p>
                     <p class="is-italic"><a href="/auth/login">Login</a></p>
                   </div>
-                   </form>
+                </form>
               </div>
             </div>
           </div>
@@ -168,16 +259,14 @@
       </div>
     </section>
   </body>
-<script src="/js/register_val.js">
-  
-</script>
+
   <style>
     #a {
-      height: 100vh;
+      height: 98vh;
     }
 
     body {
-background-image: url("/images/b3.jpg");
+background-image: url("images/b3.jpg");
       background-repeat: no-repeat;
 
       background-size: cover;
@@ -196,7 +285,6 @@ background-image: url("/images/b3.jpg");
         #star {
       color: red;
     }
-   
   </style>
 
 </html>

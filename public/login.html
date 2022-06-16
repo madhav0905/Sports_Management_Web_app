@@ -11,6 +11,40 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+    <script>
+      function validate() {
+        event.preventDefault();
+        console.log("this is from function");
+        let point_to_p = document.getElementById("err_dis");
+        let form_pointer = document.getElementById("myform");
+        var check_username = form_pointer.elements["user_name"].value;
+        var check_password = form_pointer.elements["password"].value;
+
+        if (
+          /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
+            form_pointer.elements["user_name"].value
+          )
+        ) {
+          point_to_p.style.visibility = "hidden";
+        } else {
+          point_to_p.style.visibility = "visible";
+          point_to_p.innerHTML = "Invalid Email";
+          return false;
+        }
+        var passw = /^[A-Za-z]\w{7,14}$/;
+        if (passw.test(check_password)) {
+          point_to_p.style.visibility = "hidden";
+        } else {
+          point_to_p.style.visibility = "visible";
+          point_to_p.innerHTML =
+            "Password requires at 7 letters and start with alphabets";
+
+          return false;
+        }
+
+        return true;
+      }
+    </script>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"
@@ -24,10 +58,11 @@
             <div class="columns is-centered">
               <div class="column is-5-tablet is-4-desktop is-4-widescreen">
                 <form
+                  onsubmit="validate()"
                   action="/auth/loggedin"
                   method="post"
                   class="box"
-                  onSubmit="return validate()"
+                  id="myform"
                 >
                   <div class="columns is-mobile is-centered is-vcentered">
                     <div class="column">
@@ -71,9 +106,9 @@
                       </span>
                     </p>
                   </div>
-                  <% msg.forEach(m => { %>
-                  <h2 class="has-text-danger"><%= m %></h2>
-                  <%})%>
+                  <div class="field mb-0">
+                    <p class="has-text-red" style="color: red" id="err_dis"></p>
+                  </div>
                   <div class="field has-text-centered mb-2">
                     <button class="button is-success">Login</button>
                   </div>
@@ -92,14 +127,12 @@
       </div>
     </section>
   </body>
-  <script src="/js/login.val.js"></script>
   <style>
     body {
-      background-image: url("/images/b3.jpg");
+      background-image: url("images/b3.jpg");
       background-repeat: no-repeat;
       background-size: cover;
       opacity: 0.9;
-      margin: 0%;
     }
     img {
       width: 9rem;

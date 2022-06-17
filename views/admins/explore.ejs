@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Explore</title>
+    <%- include("../partials/heading") %>
+    <body>
+      <%- include("../partials/admin_nav")%>
+      <div class="container is-widescreen">
+        <% if(posts.length) {%> <% posts.forEach(posts => { %>
+        <div class="notification is-warning has-shadow">
+          <p class="title"><%= posts.posttitle%></p>
+          <p class="is-pulled-right">Likes: <%= posts.likes %></p>
+          <p class="subtitle">
+            <a href="/logged/user/<%= posts.post_create.username %>"
+              >Author : <%= posts.post_create.username %></a
+            >
+          </p>
+          <p>
+            <a
+              class="button is-danger is-pulled-right"
+              href="/logged/read/<%= posts._id %>"
+              >Read More</a
+            >
+          </p>
+          <p><%= posts.tags %></p>
+          <p>Last modified at :<%= posts.date %></p>
+        </div>
+        <%})%>
+      </div>
+      <% } else { %>
+      <div class="notification is-centered is-warning">
+        <h1 class="title is-centered has-text-white">NO POSTS</h1>
+      </div>
+      <% } %>
+    </body>
+  </head>
+</html>

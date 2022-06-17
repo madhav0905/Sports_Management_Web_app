@@ -16,7 +16,7 @@ const bodyparser = require("body-parser"); //middleware
 const urlencoded = bodyparser.urlencoded({ extended: false });
 const validate_joi = require("../validate/validate_register");
 const { User, Team, Tournament } = require("../Schemas/model");
-
+const auth = require("../Middleware/auth");
 require("dotenv").config();
 router.get("/login", (req, res) => {
   res.render("login", { msg: [] });
@@ -25,32 +25,7 @@ router.get("/login", (req, res) => {
 router.get("/register", (req, res) => {
   res.render("register", { msg: [] });
 });
-router.get("/s", async (req, res) => {
-  const obj = {
-    user_name: "admin",
-    password: "admin12345",
-    name: "admin",
-    address: "Zoho Chennai",
-    age: 25,
-    bloodgroup: "B+",
-    role: "admin",
-  };
 
-  try {
-    const salt = await bcrypt.genSalt(10);
-    const hashed = await bcrypt.hash(obj.password, salt);
-    obj.password = hashed;
-  } catch (err) {
-    return res.send(err);
-  }
-  const result = new User(obj);
-  try {
-    const ans = await result.save();
-    return res.send(ans).status(200);
-  } catch (err) {
-    return res.status(400).send(err);
-  }
-});
 router.post("/store", [urlencoded], async (req, res) => {
   //validate
   console.log("reached post");
@@ -133,6 +108,12 @@ router.post("/loggedin", [urlencoded], async (req, res) => {
             secure: process.env.NODE_ENV === "production",
           });
 
+          if (obj.role === "admin") {
+            return res.redirect("/admin/explore");
+          } else {
+            //has to fill for user
+            return res.redirect("/user/explore");
+          }
           return res.send("/done");
         } else {
           return res.render("login", { msg: ["Incorrect Password"] });
@@ -146,7 +127,6 @@ router.post("/loggedin", [urlencoded], async (req, res) => {
   } catch (err) {
     return res.render("login", { msg: ["Try again"] });
   }
-
-  return res.send(req.body);
 });
+
 module.exports = router;

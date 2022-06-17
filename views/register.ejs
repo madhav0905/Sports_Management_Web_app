@@ -31,7 +31,7 @@
                 class="column is-4-tablet is-4-desktop is-4-widescreen m-0"
                 id="a"
               > 
-              <form action="/auth/store" method="post" class="box"  onSubmit="return validate();"id="myform"   >
+              <form action="/auth/store" method="post" class="box"   id="myform"   >
                   <div class="columns is-mobile is-centered is-vcentered">
                     <div class="column m-0">
                       <img src="/LOGO1.png" alt="" />
@@ -55,7 +55,9 @@
                       <span class="icon is-small is-left">
                         <i class="fa fa-envelope"></i>
                       </span>
+                      <small></small>
                     </p>
+                    
                   </div>
                   <div class="field mb-0">
                     <label class="label">Password:<span id="star">*</span></label>
@@ -70,7 +72,10 @@
                       <span class="icon is-small is-left">
                         <i class="fa fa-lock"></i>
                       </span>
+                      <small></small>
                     </p>
+                    
+        
                   </div>
 
                   <div class="field mb-0">
@@ -86,7 +91,10 @@
                       <span class="icon is-small is-left">
                         <i class="fa fa-user"></i>
                       </span>
+          <small></small>
                     </p>
+                    
+                  
                   </div>
                   <div class="field mb-0">
                     <label class="label">Address<span id="star">*</span></label>
@@ -101,7 +109,10 @@
                       <span class="icon is-small is-left">
                         <i class="fa fa-info-circle"></i>
                       </span>
+                      <small></small>
                     </p>
+                    
+   
                   </div>
                   <div class="field mb-0">
                     <label class="label">Age<span id="star">*</span></label>
@@ -118,7 +129,10 @@
                       <span class="icon is-small is-left">
                         <i class="fa fa-info-circle"></i>
                       </span>
+                      <small></small>
                     </p>
+                    
+                   
                   </div>
                   <div class="field mb-0">
                     
@@ -145,9 +159,7 @@
                       </span>
                     </div>
                   </div>
-                       <div class="field mb-0">
-                    <p class="has-text-red" style="color: red;" id="err_dis" ></p>
-                  </div>
+                     
                   <% msg.forEach(m => { %>
                   <h2 class="has-text-danger"><%= m %></h2>
                   <%})%>
@@ -168,25 +180,26 @@
       </div>
     </section>
   </body>
-<script src="/js/register_val.js">
+<script src="/js/reg_val.js">
   
 </script>
   <style>
     #a {
-      height: 100vh;
+      height:100 vh;
     }
-
+small
+{
+  font-size: small;
+}
     body {
 background-image: url("/images/b3.jpg");
       background-repeat: no-repeat;
-
+background-attachment: fixed;
       background-size: cover;
       margin: 0%;
       opacity: 0.9;
     }
-    #m-header {
-      height: min-content;
-    }
+   
     img {
       width: 8rem;
       height: 7rem;
@@ -196,7 +209,12 @@ background-image: url("/images/b3.jpg");
         #star {
       color: red;
     }
-   
+    small{
+      color: red;
+    }
+ 
+
+
   </style>
 
 </html>

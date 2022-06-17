@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Explore</title>
+    <%- include("../partials/heading") %>
+    <body>
+      <%- include("../partials/admin_nav")%>
+      <div class="container is-widescreen m-4">
+        <div class="columns is-mobile">
+  <div class="column is-three-fifths is-offset-one-fifth m-2">
+    <div class="box m-4">
+
+<form id="myform" action="" method="post" >
+<div class="field">
+   <label class="label">Name Of Tournament<span id="star">*</span></label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input " type="text" placeholder="Tournament name" name="name">
+    <span class="icon is-small is-left">
+      <i class="fa fa-info"></i>
+    </span>
+    <small></small>
+    </div>
+    </div>
+<div class="field">
+   <label class="label">Sport Of Tournament<span id="star">*</span></label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input " type="text" placeholder="Tournament name" name="sport" required>
+    <span class="icon is-small is-left">
+      <i class="fa fa-futbol-o"></i>
+    </span>
+     <small></small>
+    </div>
+    </div>
+    <div class="field">
+   <label class="label">Sport Type<span id="star">*</span></label>
+   <div class="control has-icons-left"></p>
+                    <div class="select">
+                      <select class="is-hovered" name="sport_type" id="sport_type" onChange="toggle_in_out()">
+                        <option value="single" selected>Single</option>
+                        <option value="team">Team</option>
+
+                      </select>
+                  
+                  </div>
+                    <span class="icon is-small is-left">
+                        <i class="fa fa-group"></i>
+                      </span>
+                    </div>
+    </div>
+    <div class="field" id="for_single" >
+   <label class="label">Number of Players for Single Tournament<span id="star">*</span></label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input " type="number" placeholder="Max Number of Participants" min=1 name="number_single_player">
+    <span class="icon is-small is-left">
+      <i class="fa fa-info"></i>
+    </span>
+     <small></small>
+    </div>
+    </div>
+    <div class="field" id="for_team">
+   <label class="label">Number of Teams<span id="star">*</span></label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input " type="number" placeholder="Number of Teams " name="numofteams" min=1 >
+    <span class="icon is-small is-left">
+      <i class="fa fa-info"></i>
+    </span>
+     <small></small>
+    </div>
+    </div>
+ <div class="field" id="for_team_players">
+   <label class="label">Number of Players Per Team<span id="star">*</span></label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input " type="number" placeholder="Number of Players per Team" name="playerspteam" min=2 >
+    <span class="icon is-small is-left">
+      <i class="fa fa-info"></i>
+    </span>
+     <small></small>
+    </div>
+    </div>
+ <div class="field" >
+   <label class="label">Start Date<span id="star">*</span></label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input " type="date" placeholder="Start Date of Tournament" name="start_date" required>
+    <span class="icon is-small is-left">
+      <i class="fa fa-info"></i>
+    </span>
+     <small></small>
+    </div>
+    </div>
+ <div class="field" >
+   <label class="label">End Date<span id="star">*</span></label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input " type="date" placeholder="End Date of Tournament" name="end_date" required>
+    <span class="icon is-small is-left">
+      <i class="fa fa-info"></i>
+    </span>
+     <small></small>
+    </div>
+    </div>
+    <div class="field mb-0">
+                    <p class="has-text-red" style="color: red;" id="err_dis" ></p>
+                  </div>
+     <div class="field has-text-centered mb-0">
+            
+                    <input type="submit" class="button is-success" value="Submit">
+                  </div>
+
+
+</form>
+
+
+
+
+
+
+
+    </div>
+  </div>
+</div>
+    </body>
+  </head>
+  <script src="/js/tournament_val.js"></script>
+  <style>
+    #for_team
+    {
+        display: none;
+    }
+    #for_team_players
+    {
+        display: none;
+    }
+    #star
+    {
+        color: red;
+    }
+    #searchandinput
+    {
+      display: none;
+    }
+  </style>
+</html>

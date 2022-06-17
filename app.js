@@ -20,7 +20,8 @@ const coo = require("cookie-parser");
 app.use(coo("random"));
 require("dotenv").config();
 const router1 = require("./Routes/routes1");
-
+const router2 = require("./Routes/routes2");
+const router3 = require("./Routes/routes3");
 //
 mongoose
   .connect(process.env.mongo_url)
@@ -32,6 +33,8 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/auth", router1);
+app.use("/admin", router2);
+app.use("/user", router3);
 app.get("/", (req, res) => {
   return res.redirect("/auth/login");
 });

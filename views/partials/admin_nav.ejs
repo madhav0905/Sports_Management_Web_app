@@ -1,0 +1,103 @@
+<nav class="navbar is-transparent has-shadow is-black is-italic ">
+    <div class="navbar-brand ">
+      <a class="navbar-item mt-0 mb-0" href="#">
+       <p class="subtitle has-text-warning">ABC LIMITED</p>
+      </a>
+      <div class="navbar-burger" data-target="navbarExampleTransparentExample">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  
+    <div id="navbarExampleTransparentExample" class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item is-italic  is-active is-tab " href="/admin/explore">
+           Explore
+        </a>
+        <a class="navbar-item is-italic " href="/admin/create">
+        Create Tournament
+          </a>
+        
+        
+      </div>
+  </div>
+      <div class="navbar-end">
+
+        <div class="navbar-item" id="searchandinput">
+            
+          <p class="control">
+       
+                <div class="control has-icons-left">
+                  <form action="#" method="get">
+                
+                
+                  <span class="icon is-left"><i class="fa fa-search"></i></span>
+                </div>
+                <div class="control">
+                  
+                  <button class="button is-info is-italic">
+                    Search
+                  </button>
+                </form>
+                </div>
+            
+            </p>
+            </div>
+            <div class="navbar-item">
+              
+            <p class="control">
+        <a   href="/logged/logout" class=" button is-danger is-italic">Log out</a>
+           
+            </p>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+  </nav>
+  <div class="container is-widescreen">
+   
+
+<style>
+a .nav-item .is-active
+{
+    background-color: aqua;
+}
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+
+// Get all "navbar-burger" elements
+var $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+// Check if there are any nav burgers
+if ($navbarBurgers.length > 0) {
+
+// Add a click event on each of them
+$navbarBurgers.forEach(function ($el) {
+$el.addEventListener('click', function () {
+
+  // Get the target from the "data-target" attribute
+  var target = $el.dataset.target;
+  var $target = document.getElementById(target);
+
+  // Toggle the class on both the "navbar-burger" and the "navbar-menu"
+  $el.classList.toggle('is-active');
+  $target.classList.toggle('is-active');
+
+});
+});
+}
+
+});
+window.addEventListener( "pageshow", function ( event ) {
+  var historyTraversal = event.persisted || ( typeof window.performance != "undefined" && window.performance.navigation.type === 2 );
+  if ( historyTraversal ) {
+    // Handle page restore.
+    //alert('refresh');
+    window.location.reload();
+  }
+});
+</script>
+</html>

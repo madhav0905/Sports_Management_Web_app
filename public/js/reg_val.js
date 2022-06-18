@@ -5,13 +5,16 @@ var inputs = document.getElementsByTagName("input");
 for (i = 0; i < inputs.length; i++) {
   console.log("inside for");
   inputs[i].onkeyup = checkInput;
+  input[i].onchange = checkInput;
 }
+let y;
 function checkInput() {
   var check_username = form_pointer.elements["user_name"];
   var check_password = form_pointer.elements["password"];
   var check_name = form_pointer.elements["name"];
   var check_address = form_pointer.elements["address"];
   var check_age = form_pointer.elements["age"];
+  let x = 0;
   if (
     /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
       form_pointer.elements["user_name"].value
@@ -21,6 +24,7 @@ function checkInput() {
   } else {
     if (check_username.value != "") {
       setError(check_username, "Email should be valid ");
+      x++;
     }
   }
   var passw = /^[A-Za-z]\w{7,14}$/;
@@ -32,6 +36,7 @@ function checkInput() {
         check_password,
         "Passwords should start with alphabet and atleast contain 7 characters "
       );
+      x++;
     }
   }
   if (
@@ -45,6 +50,7 @@ function checkInput() {
         check_name,
         "Name should be atleast 5 letters and should  only string"
       );
+      x++;
     }
   }
 
@@ -53,6 +59,7 @@ function checkInput() {
   //check if age is a number or less than or greater than 100
   if (isNaN(age) || age < 1 || age > 100) {
     setError(check_age, "Age should be from 10 to 100");
+    x++;
   } else {
     setSuccess(check_age);
   }
@@ -67,8 +74,10 @@ function checkInput() {
   } else {
     if (check_address.value != "") {
       setError(check_address, "Address should be atleast 7 letters");
+      x++;
     }
   }
+  y = x;
 }
 function setError(input, message) {
   const formControl = input.parentElement;
@@ -81,4 +90,11 @@ function setSuccess(input) {
   const small = formControl.querySelector("small");
 
   small.innerText = "";
+}
+function validate() {
+  checkInput();
+  if (y == 0) {
+    return true;
+  }
+  return false;
 }

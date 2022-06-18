@@ -41,8 +41,6 @@ router.post("/store", [urlencoded], async (req, res) => {
   const result = await User.find({ user_name: req.body.user_name });
 
   if (result.length) {
-    console.log("hi");
-
     return res.render("register", {
       msg: ["Already registered with this Email"],
     });
@@ -114,7 +112,6 @@ router.post("/loggedin", [urlencoded], async (req, res) => {
             //has to fill for user
             return res.redirect("/user/explore");
           }
-          return res.send("/done");
         } else {
           return res.render("login", { msg: ["Incorrect Password"] });
         }

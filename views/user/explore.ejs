@@ -4,7 +4,7 @@
     <title>Explore</title>
     <%- include("../partials/heading") %>
     <body>
-      <%- include("../partials/admin_nav")%>
+      <%- include("../partials/user_nav")%>
       <section class="section">
         <div class="columns is-multiline">
           <% if(tournaments.length){%> <% tournaments.forEach(obj => { var x =
@@ -32,13 +32,14 @@
                 <p>end_date :<%= y %></p>
               </div>
               <footer class="card-footer">
-                <a
-                  href="/admin/tournament/<%= obj._id%>"
-                  class="card-footer-item"
-                  >Check Info</a
-                >
-                <a href="#" class="card-footer-item">Edit</a>
-                <a href="#" class="card-footer-item">Delete</a>
+                <button class="button card-footer-item">
+                  <a
+                    href="/admin/tournament/<%= obj._id%>"
+                    class="card-footer-item"
+                  >
+                    >Register</a
+                  >
+                </button>
               </footer>
             </div>
           </div>

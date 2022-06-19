@@ -5,9 +5,9 @@ var inputs = document.getElementsByTagName("input");
 for (i = 0; i < inputs.length; i++) {
   console.log("inside for");
   inputs[i].onkeyup = checkInput;
-  input[i].onchange = checkInput;
+  inputs[i].onchange = checkInput;
 }
-let y;
+let y = -1;
 function checkInput() {
   var check_username = form_pointer.elements["user_name"];
   var check_password = form_pointer.elements["password"];

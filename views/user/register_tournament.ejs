@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Explore</title>
+    <%- include("../partials/heading") %>
+    <body>
+      <%- include("../partials/user_nav")%>
+      <section class="section">
+        <div class="columns is-mobile is-multiline">
+          <div class="column">
+            <div class="box">
+              <article class="message is-info">
+                <div class="message-header">
+                  <p>Tournament Details</p>
+                </div>
+                <div class="message-body">
+                  <% var obj=tournaments; var x =
+                  moment(obj.start_date).format("YYYY-MM-DD"); var y =
+                  moment(obj.end_date).format("YYYY-MM-DD");%>
+                  <p><%= tournaments.name %></p>
+                  <p><%= tournaments.sport%></p>
+                  <% if(obj.sport_type==="team") {%>
+                  <p>Team</p>
+                  <p>Number Of Teams : <%=obj.numofteams%></p>
+                  <p>Players Per Team: <%=obj.playerspteam%></p>
+
+                  <p>Current Number of Teams :<%=obj.curr_num_teams%></p>
+                  <% }else {%>
+                  <p>Single</p>
+
+                  <p>Players : <%=obj.number_single_player%></p>
+                  <p>Current Number of Players :<%=obj.curr_num_teams%></p>
+                  <% } %>
+
+                  <p>start_date :<%= x %></p>
+                  <p>end_date :<%= y %></p>
+                  <p>Hurry up!</p>
+                </div>
+              </article>
+            </div>
+          </div>
+          <div class="column">
+            <div class="box">
+              <form
+                action="/user/reg_tour_store"
+                method="post"
+                onSubmit="return validate()"
+              >
+                <% var
+                diff=parseInt(obj.number_single_player)-parseInt(obj.curr_num_teams);
+                if(obj.sport_type==='single') {%>
+                <div class="field">
+                  <p class="has-text-warning">
+                    Click on Register Button Fast as there are only <%=diff%>
+                    Registrations left
+                  </p>
+                  <input
+                    type="hidden"
+                    class="input"
+                    name="tid"
+                    value="<%=obj._id%>"
+                    hidden
+                  />
+                  <input
+                    type="hidden"
+                    class="input"
+                    name="pid"
+                    value="<%=player%>"
+                    hidden
+                  />
+                  <input
+                    type="hidden"
+                    class="input"
+                    name="req_num"
+                    value="<%=obj.playerspteam%>"
+                    hidden
+                  />
+                  <input
+                    type="hidden"
+                    class="input"
+                    name="select_type"
+                    value="single"
+                  />
+                </div>
+
+                <% }else { %>
+                <div class="field">
+                  <label class="label"
+                    >Select One<span id="star">*</span></label
+                  >
+                  <div class="control has-icons-left">
+                    <div class="select">
+                      <select
+                        class="is-hovered"
+                        name="select_type"
+                        id="select_type"
+                        onChange="toggle_in_out()"
+                      >
+                        <option value="choose" selected>Choose a Team</option>
+                        <option value="create_team">Create a Team</option>
+                      </select>
+                    </div>
+                    <span class="icon is-small is-left">
+                      <i class="fa fa-medkit"></i>
+                    </span>
+                  </div>
+                  <small id="noteam"></small>
+                </div>
+                <div class="field" id="chooseteam">
+                  <label class="label"
+                    >Select Team<span id="star">*</span>
+                  </label>
+
+                  <div class="control has-icons-left">
+                    <div class="select">
+                      <select
+                        class="is-hovered"
+                        name="chooseteam"
+                        id="choose_team"
+                        required
+                      >
+                        <% obj.team_id.forEach(team => {
+                        console.log(team);if(team.vacanies!=0){%>
+
+                        <option value="<%=team._id%>">
+                          <%=team.team_name%>
+                        </option>
+                        <% }%> <% })%>
+                      </select>
+                    </div>
+                    <span class="icon is-small is-left">
+                      <i class="fa fa-medkit"></i>
+                    </span>
+                  </div>
+                </div>
+                <div class="field mb-0" id="createteam">
+                  <label class="label"
+                    >Create Team<span id="star">*</span>
+                  </label>
+                  <p class="control has-icons-left">
+                    <input
+                      class="input"
+                      type="text"
+                      placeholder="Team Name"
+                      id="val_create_name"
+                      name="team_name"
+                    />
+                    <span class="icon is-small is-left">
+                      <i class="fa fa-info-circle"></i>
+                    </span>
+                    <small></small>
+                  </p>
+                </div>
+
+                <input
+                  type="hidden"
+                  class="input"
+                  name="tid"
+                  value="<%=obj._id%>"
+                  hidden
+                />
+                <input
+                  type="hidden"
+                  class="input"
+                  name="pid"
+                  value="<%=player%>"
+                  hidden
+                />
+                <input
+                  type="hidden"
+                  class="input"
+                  name="req_num"
+                  value="<%=obj.playerspteam%>"
+                  hidden
+                />
+
+                <% }%>
+                <div class="field has-text-centered mb-0">
+                  <input
+                    type="submit"
+                    class="button is-success"
+                    value="Submit"
+                    id="submit"
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <script src="/js/reg_tour_val.js"></script>
+      <style>
+        #createteam {
+          display: none;
+        }
+        #star {
+          color: red;
+        }
+        #searchandinput {
+          display: none;
+        }
+        small {
+          color: red;
+          font-size: small;
+        }
+      </style>
+    </body>
+  </head>
+</html>

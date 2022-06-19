@@ -16,7 +16,7 @@ const tournamentschema = new mongoose.Schema({
   status_tournament: { type: String, default: "Active" },
   //team
   team_id: {
-    type: [{ type: mongoose.Schema.Types.ObjectId, default: [] }],
+    type: [{ type: mongoose.Schema.Types.ObjectId, default: [], ref: "team" }],
   },
 });
 const userschema = new mongoose.Schema({
@@ -39,13 +39,15 @@ const userschema = new mongoose.Schema({
     //tournament
   },
   team_id: {
-    type: [{ type: mongoose.Schema.Types.ObjectId, default: [] }],
+    type: [{ type: mongoose.Schema.Types.ObjectId, default: [], ref: "team" }],
   },
   tournament_id: {
-    type: [{ type: mongoose.Schema.Types.ObjectId, default: [] }],
+    type: [
+      { type: mongoose.Schema.Types.ObjectId, default: [], ref: "tournament" },
+    ],
   },
   teams_created_id: {
-    type: [{ type: mongoose.Schema.Types.ObjectId, default: [] }],
+    type: [{ type: mongoose.Schema.Types.ObjectId, default: [], ref: "team" }],
   },
   role: {
     type: String,
@@ -72,19 +74,21 @@ const teamschema = new mongoose.Schema({
   },
   status: {
     type: String,
-    deafult: "Active",
+    default: "Active",
   },
   players_id: {
     type: [{ type: mongoose.Schema.Types.ObjectId, default: [], ref: "user" }],
   },
   created_player_id: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
     required: true,
   },
 });
+const Tournament = new mongoose.model("tournament", tournamentschema);
 const User = new mongoose.model("user", userschema);
 const Team = new mongoose.model("team", teamschema);
-const Tournament = new mongoose.model("tournament", tournamentschema);
+
 module.exports.User = User;
 module.exports.Team = Team;
 module.exports.Tournament = Tournament;

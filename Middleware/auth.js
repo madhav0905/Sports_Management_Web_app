@@ -12,7 +12,7 @@ module.exports = function (req, res, next) {
   if (req.baseUrl === "/user" && dec.role != "user") {
     return res.status(401).send("Access Denied");
   }
-  console.log(req.baseUrl);
+
   req.decoded = dec._id;
   req.decoded_role = dec.role;
   next();

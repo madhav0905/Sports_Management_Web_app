@@ -53,7 +53,11 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
   return res.render("admins/explore", { posts: [] });
 });
 router.get("/create", [auth, urlencoded], async (req, res) => {
-  return res.render("admins/create_tournament", { msg: [], given_pattern: "" });
+  return res.render("admins/create_tournament", {
+    msg: [],
+    given_pattern: "",
+    moment: moment,
+  });
 });
 router.post("/store", [auth, urlencoded], async (req, res) => {
   if (req.body.numofteams == "") {

@@ -81,7 +81,8 @@
  <div class="field" >
    <label class="label">Start Date<span id="star">*</span></label>
   <div class="control has-icons-left has-icons-right">
-    <input class="input " type="date" placeholder="Start Date of Tournament" name="start_date" required>
+    <% var min_date=moment().format('YYYY-MM-DD')%>
+    <input class="input " type="date" min=<%=min_date%> placeholder="Start Date of Tournament" name="start_date" required>
     <span class="icon is-small is-left">
       <i class="fa fa-info"></i>
     </span>
@@ -91,7 +92,7 @@
  <div class="field" >
    <label class="label">End Date<span id="star">*</span></label>
   <div class="control has-icons-left has-icons-right">
-    <input class="input " type="date" placeholder="End Date of Tournament" name="end_date" required>
+    <input class="input " type="date"min=<%=min_date%> placeholder="End Date of Tournament" name="end_date" required>
     <span class="icon is-small is-left">
       <i class="fa fa-info"></i>
     </span>

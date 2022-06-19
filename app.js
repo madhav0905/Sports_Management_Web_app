@@ -46,6 +46,9 @@ app.get("/logged/logout", [urlencoded], (req, res) => {
   });
   res.redirect("/");
 });
+app.get("*", (req, res) => {
+  return res.render("page_not_found");
+});
 app.listen(process.env.port, () => {
   console.log(`Connected to Port ${process.env.port}`);
 });

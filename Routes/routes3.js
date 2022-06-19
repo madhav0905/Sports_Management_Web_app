@@ -110,7 +110,7 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
             user_obj.curr_num_teams += 1;
             user_obj
               .save()
-              .then((result) => res.send("successful"))
+              .then((result) => res.redirect("/user/explore"))
               .catch((err) => res.send(err));
           } else {
             return res.send("max participants registered Sorrry");
@@ -131,7 +131,7 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
                 user_obj
                   .save()
                   .then((fin_res) => {
-                    return res.send("success");
+                    return res.redirect("/user/explore");
                   })
                   .catch(() => res.render("error", { msg: ["Try again"] }));
               })
@@ -167,7 +167,7 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
                 user_obj.teams_created_id.push(result._id);
                 const data = await user_obj.save();
                 if (data) {
-                  return res.send(data);
+                  return res.redirect("/user/explore");
                 }
               }
             } else {

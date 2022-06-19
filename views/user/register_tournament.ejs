@@ -119,13 +119,15 @@
                         id="choose_team"
                         required
                       >
-                        <% obj.team_id.forEach(team => {
-                        console.log(team);if(team.vacanies!=0){%>
-
-                        <option value="<%=team._id%>">
+                        <% var flag=0;obj.team_id.forEach(team => {
+                        if(team.vacanies!=0){%> <%if(flag==0) {%>
+                        <option value="<%=team._id%>" selected>
                           <%=team.team_name%>
                         </option>
-                        <% }%> <% })%>
+                        <% flag=1; }else{%>
+                        <option value="<%=team._id%>">
+                          <%=team.team_name%> <%} %> <% }%> <% })%>
+                        </option>
                       </select>
                     </div>
                     <span class="icon is-small is-left">

@@ -38,6 +38,14 @@ app.use("/user", router3);
 app.get("/", (req, res) => {
   return res.redirect("/auth/login");
 });
+app.get("/logged/logout", [urlencoded], (req, res) => {
+  res.cookie("access_token", "", {
+    expires: new Date(0),
+    domain: "localhost",
+    path: "/",
+  });
+  res.redirect("/");
+});
 app.listen(process.env.port, () => {
   console.log(`Connected to Port ${process.env.port}`);
 });

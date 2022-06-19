@@ -9,6 +9,7 @@ function toggle_in_out() {
     pointer_submit.value = "Register";
     document.getElementById("val_create_name").required = false;
     document.getElementById("val_create_name").value = "sdsa";
+    document.getElementById("choose_team").options[0].selected = true;
   } else {
     pointer_createteam.style.display = "block";
     document.getElementById("val_create_name").required = true;

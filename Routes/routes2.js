@@ -75,8 +75,10 @@ router.post("/store", [auth, urlencoded], async (req, res) => {
       end_date: { $gte: S },
     });
     if (all_records.length) {
+      console.log(all_records);
       return res.render("admins/create_tournament", {
         msg: ["There is tournament in this slot , please try different date"],
+        given_pattern: "",
       });
     } else {
       const obj = new Tournament(req.body);

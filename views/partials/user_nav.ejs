@@ -13,13 +13,16 @@
   
     <div id="navbarExampleTransparentExample" class="navbar-menu">
       <div class="navbar-start">
-        <a class="navbar-item is-italic  is-active is-tab " id="y" href="/user/explore">
+        <a class="navbar-item is-italic  is-active is-tab "  href="/user/explore">
            Explore
         </a>
-        <a class="navbar-item is-italic "id="x" href="/user/create">
+        <a class="navbar-item is-italic " href="/user/show">
         Your Tournaments
           </a>
-        
+           <a class="navbar-item is-italic " href="/user/create">
+        Request for join in Team
+          </a>
+        <% var active_tab=active_tab; console.log(active_tab);%>
         
       </div>
   </div>
@@ -103,6 +106,21 @@ window.addEventListener( "pageshow", function ( event ) {
     window.location.reload();
   }
 });
+var x = document.querySelectorAll(".navbar-start a"); 
+
+var active_tab='<%-active_tab%>'
+for(var i=0;i<x.length;i++)
+{
+
+  x[i].classList.remove("is-tab"); 
+x[i].classList.remove("is-active");
+
+
+}
+
+x[parseInt(active_tab)-1].classList.add("is-tab");
+x[parseInt(active_tab)-1].classList.add("is-active");
+
 </script>
 <style>
   

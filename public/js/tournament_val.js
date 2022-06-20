@@ -43,10 +43,10 @@ for (i = 0; i < inputs.length; i++) {
   inputs[i].onkeyup = checkInput;
   inputs[i].onchange = checkInput;
 }
-let y;
+let y = -1;
 function checkInput() {
   let x = 0;
-  let check_name = form.elements["name"];
+  let check_name = form.elements["tname"];
   let check_sport = form.elements["sport"];
   let check_single_num = form.elements["number_single_player"];
   let check_num_teams = form.elements["numofteams"];

@@ -25,7 +25,7 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
   if (given_pattern != "") {
     try {
       const re_obj = await Tournament.find({
-        name: new RegExp(given_pattern, "i"),
+        tname: new RegExp(given_pattern, "i"),
       });
 
       return res.render("admins/explore", {
@@ -50,7 +50,6 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
       return res.render("error", { msg: ["Server Busy Please try again!"] });
     }
   }
-  return res.render("admins/explore", { posts: [] });
 });
 router.get("/create", [auth, urlencoded], async (req, res) => {
   return res.render("admins/create_tournament", {
@@ -86,10 +85,11 @@ router.post("/store", [auth, urlencoded], async (req, res) => {
       });
     } else {
       const obj = new Tournament(req.body);
+
       try {
         const result = await obj.save();
 
-        return res.send(result);
+        return res.redirect("/admin/explore");
       } catch (err) {
         return res.render("error", { msg: [err] });
       }

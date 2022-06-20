@@ -41,6 +41,7 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
               tournaments: obj,
               given_pattern: tour_name,
               moment: moment,
+              active_tab: 1,
             })
           )
           .catch((err) => res.render("error", { msg: [err] }));
@@ -55,6 +56,7 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
               tournaments: obj,
               given_pattern: "",
               moment: moment,
+              active_tab: 1,
             })
           )
           .catch((err) => res.render("error", { msg: [err] }));
@@ -77,7 +79,7 @@ router.get("/tournament/:id", [auth, urlencoded], async (req, res) => {
   console.log("came here");
   try {
     const tour_obj = await Tournament.findById(tid).populate("team_id");
-    console.log(tour_obj + "sadsda");
+
     if (tour_obj) {
       return res.render("user/register_tournament", {
         tournaments: tour_obj,
@@ -187,5 +189,31 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
     return res.render("error", { msg: [err] });
   }
 });
+router.get("/show", [auth, urlencoded], async (req, res) => {
+  const pid = req.decoded;
+  let given_pattern = req.query.search;
 
+  if (!given_pattern) {
+    given_pattern = "";
+  }
+  console.log(given_pattern);
+  try {
+    const user_obj = await User.findById(pid).populate({
+      path: "tournament_id",
+      match: { tname: new RegExp(given_pattern, "i") },
+
+      populate: { path: "team_id" },
+    });
+    if (user_obj) {
+      return res.render("user/show", {
+        active_tab: 2,
+        tournament: user_obj,
+        given_pattern: given_pattern,
+        moment: moment,
+      });
+    }
+  } catch (err) {
+    return res.render("error", { msg: [err] });
+  }
+});
 module.exports = router;

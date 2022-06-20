@@ -4,7 +4,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 
 const tournamentschema = new mongoose.Schema({
-  name: { type: String, unique: true, required: true },
+  tname: { type: String, unique: true, required: true },
   sport: { type: String, required: true },
   sport_type: { type: String, required: true },
   number_single_player: { type: "Number", default: 1 },

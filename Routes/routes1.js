@@ -88,7 +88,7 @@ router.post("/loggedin", [urlencoded], async (req, res) => {
 
   try {
     const obj = await User.findOne({ user_name: ms["user_name"] });
-    console.log(obj + "ahah");
+
     if (obj) {
       const decrypted_password = await bcrypt.compare(
         ms["password"],

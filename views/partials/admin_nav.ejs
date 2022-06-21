@@ -14,7 +14,7 @@
     <div id="navbarExampleTransparentExample" class="navbar-menu">
       <div class="navbar-start">
         <a class="navbar-item is-italic  is-active is-tab " id="y" href="/admin/explore">
-           Explore
+         Tournaments
         </a>
         <a class="navbar-item is-italic "id="x" href="/admin/create">
         Create Tournament
@@ -32,9 +32,9 @@
                 <div class="control has-icons-left">
                   <form action="#" method="get">
                 <% if(given_pattern==="") {%>
-                <input type="search" name="search" class="input" id="a">
+                <input type="search" name="search" class="input" id="a" placeholder="Search By Tournament Name">
                 <%} else {%>
-               <input type="search" name="search" class="input" id="a" value="<%= given_pattern %>">
+               <input type="search" name="search" class="input" id="a" value="<%= given_pattern %>"  placeholder="Search By Tournament Name">
                <% }%> 
                 <span class="icon is-left"><i class="fa fa-search"></i></span>
                 </div>
@@ -103,6 +103,20 @@ window.addEventListener( "pageshow", function ( event ) {
     window.location.reload();
   }
 });
+var x = document.querySelectorAll(".navbar-start a"); 
+
+var active_tab='<%-active_tab%>'
+for(var i=0;i<x.length;i++)
+{
+
+  x[i].classList.remove("is-tab"); 
+x[i].classList.remove("is-active");
+
+
+}
+
+x[parseInt(active_tab)-1].classList.add("is-tab");
+x[parseInt(active_tab)-1].classList.add("is-active");
 </script>
 <style>
   

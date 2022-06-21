@@ -32,6 +32,7 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
         tournaments: re_obj,
         moment: moment,
         given_pattern: given_pattern,
+        active_tab: 1,
       });
     } catch (err) {
       console.log(err);
@@ -45,6 +46,7 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
         tournaments: obj,
         moment: moment,
         given_pattern: "",
+        active_tab: 1,
       });
     } catch (err) {
       return res.render("error", { msg: ["Server Busy Please try again!"] });
@@ -56,6 +58,7 @@ router.get("/create", [auth, urlencoded], async (req, res) => {
     msg: [],
     given_pattern: "",
     moment: moment,
+    active_tab: 2,
   });
 });
 router.post("/store", [auth, urlencoded], async (req, res) => {
@@ -78,12 +81,30 @@ router.post("/store", [auth, urlencoded], async (req, res) => {
       end_date: { $gte: S },
     });
     if (all_records.length) {
-      console.log(all_records);
+      const errmsg =
+        "There is a tournament already in this slot from " +
+        moment(all_records[0].start_date).format("YYYY-MM-DD") +
+        " to " +
+        moment(all_records[0].end_date).format("YYYY-MM-DD");
       return res.render("admins/create_tournament", {
-        msg: ["There is tournament in this slot , please try different date"],
+        msg: [errmsg],
         given_pattern: "",
+        moment: moment,
+        active_tab: 2,
       });
     } else {
+      const other_obj = await Tournament.find({ tname: req.body.tname });
+      if (other_obj.length) {
+        return res.render("admins/create_tournament", {
+          msg: [
+            "There is already A Tournament with the same name Please change the name",
+          ],
+          given_pattern: "",
+          moment: moment,
+          active_tab: 2,
+        });
+      }
+
       const obj = new Tournament(req.body);
 
       try {

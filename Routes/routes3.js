@@ -34,16 +34,16 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
           status_tournament: "Active",
           _id: { $nin: user_tid },
           start_date: { $gte: target_date },
-          name: new RegExp(tour_name, "i"),
+          tname: new RegExp(tour_name, "i"),
         })
-          .then((obj) =>
+          .then((obj) => {
             res.render("user/explore", {
               tournaments: obj,
               given_pattern: tour_name,
               moment: moment,
               active_tab: 1,
-            })
-          )
+            });
+          })
           .catch((err) => res.render("error", { msg: [err] }));
       } else {
         await Tournament.find({
@@ -76,7 +76,7 @@ router.get("/tournament/:id", [auth, urlencoded], async (req, res) => {
   const tid = req.params["id"];
   //get tournament details
   //show form for register
-  console.log("came here");
+
   try {
     const tour_obj = await Tournament.findById(tid).populate("team_id");
 
@@ -85,10 +85,11 @@ router.get("/tournament/:id", [auth, urlencoded], async (req, res) => {
         tournaments: tour_obj,
         player: req.decoded,
         given_pattern: "",
+        pid: req.decoded,
         moment: moment,
       });
     } else {
-      console.log("hi");
+      return res.send("no tournament you tester");
     }
   } catch (err) {
     console.log("err time");
@@ -106,18 +107,29 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
         return res.send("already registered");
       }
       if (select_type == "single") {
-        Tournament.findById(tid).then((data) => {
-          if (data.number_single_player - data.curr_num_teams > 0) {
-            user_obj.tournament_id.push(tid);
-            user_obj.curr_num_teams += 1;
-            user_obj
-              .save()
-              .then((result) => res.redirect("/user/explore"))
-              .catch((err) => res.send(err));
+        const data = await Tournament.findById(tid);
+        if (data.number_single_player - data.curr_num_teams > 0) {
+          user_obj.tournament_id.push(tid);
+          data.curr_num_teams += 1;
+          data.pid.push(user_obj._id);
+          user_obj.pstatus.push({ toud_id: tid, val: "active" });
+          const user_save = await user_obj.save();
+          const tour_save = await data.save();
+          if (user_save && tour_save) {
+            res.redirect("/user/explore");
           } else {
-            return res.send("max participants registered Sorrry");
-          }
-        });
+            return res.render("error", { msg: ["Try Again"] });
+          } /*  user_obj
+              .save()
+              .then((result) =>{
+                
+                
+                
+               })
+               */
+        } else {
+          return res.send("max participants registered Sorrry");
+        }
       } else if (select_type == "choose") {
         //existing team
         const which_team = req.body.chooseteam;
@@ -125,11 +137,13 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
           if (data.vacancies > 0) {
             data.vacancies--;
             data.players_id.push(pid);
+            data.ref_players.push({ play_id: pid, val: "pending" });
             data
               .save()
               .then((team_data) => {
                 user_obj.team_id.push(team_data._id);
                 user_obj.tournament_id.push(tid);
+                user_obj.pstatus.push({ tour_id: tid, val: team_data.status });
                 user_obj
                   .save()
                   .then((fin_res) => {
@@ -163,10 +177,12 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
               const result = await new_team.save();
               if (result) {
                 tour_obj.team_id.push(result._id);
+                tour_obj.curr_num_teams += 1;
                 const final_res = await tour_obj.save();
                 user_obj.team_id.push(result._id);
                 user_obj.tournament_id.push(tid);
                 user_obj.teams_created_id.push(result._id);
+                user_obj.pstatus.push({ toud_id: tid, val: result.status });
                 const data = await user_obj.save();
                 if (data) {
                   return res.redirect("/user/explore");
@@ -196,7 +212,7 @@ router.get("/show", [auth, urlencoded], async (req, res) => {
   if (!given_pattern) {
     given_pattern = "";
   }
-  console.log(given_pattern);
+
   try {
     const user_obj = await User.findById(pid).populate({
       path: "tournament_id",
@@ -215,5 +231,18 @@ router.get("/show", [auth, urlencoded], async (req, res) => {
   } catch (err) {
     return res.render("error", { msg: [err] });
   }
+});
+router.get("/join_request", [auth, urlencoded], async (req, res) => {
+  const pid = req.decoded;
+  const captain_teams = await Team.find({ created_player_id: pid }).populate([
+    "tournament_id",
+    "ref_players.play_id",
+  ]);
+  return res.render("user/join_request", {
+    team_obj: captain_teams,
+    given_pattern: "",
+    moment: moment,
+    active_tab: 3,
+  });
 });
 module.exports = router;

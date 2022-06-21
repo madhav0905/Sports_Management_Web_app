@@ -148,5 +148,18 @@
       color: red;
       font-size: small;
     }
+       @keyframes slideInLeft {
+          0% {
+            transform: translateY(-100%);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
+        section {
+          animation: 1s ease-out 0s 1 slideInLeft;
+
+          padding: 40px;
+        }
   </style>
 </html>

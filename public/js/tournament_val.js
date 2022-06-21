@@ -155,7 +155,3 @@ function validate() {
 }
 const elem = document.getElementById("x");
 const ele = document.getElementById("y");
-elem.classList.add("is-tab"); // Add class
-ele.classList.remove("is-tab");
-ele.classList.remove("is-active");
-elem.classList.add("is-active");

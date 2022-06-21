@@ -120,7 +120,9 @@
                         required
                       >
                         <% var flag=0;obj.team_id.forEach(team => {
-                        if(team.vacanies!=0){%> <%if(flag==0) {%>
+                        if(team.vacanies!=0 &&
+                        !team.ref_players.includes({play_id:pid,val:"rejected"})){%>
+                        <%if(flag==0) {%>
                         <option value="<%=team._id%>" selected>
                           <%=team.team_name%>
                         </option>

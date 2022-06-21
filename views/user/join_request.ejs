@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Explore</title>
+    <%- include("../partials/heading") %>
+    <body>
+      <%- include("../partials/user_nav")%> <% if(team_obj.length){%> <%
+      team_obj.forEach(obj => { var x =
+      moment(obj.start_date).format("YYYY-MM-DD"); var y =
+      moment(obj.end_date).format("YYYY-MM-DD");%>
+      <section class="section m-0 has-text-centered">
+        <h1><%= obj.tournament_id.tname%> <%= obj.team_name%></h1>
+        <br />
+        <div class="columns is-multiline">
+          <% obj.ref_players.forEach(refplayer => {;
+          if(refplayer.val=="pending") {%>
+          <div class="column is-one-third">
+            <div class="card">
+              <div class="card-header">
+                <p class="card-header-title is-centered">
+                  <%=refplayer.play_id.name%>
+                </p>
+              </div>
+              <div class="card-content">
+                <p class="card-header-subtitle">
+                  <%= obj.tournament_id.sport%>
+                </p>
+                <p>Team</p>
+                <p>start_date :<%= x %></p>
+                <p>end_date :<%= y %></p>
+              </div>
+              <footer class="card-footer">
+                <a
+                  href="/admin/tournament/<%= obj._id%>"
+                  class="card-footer-item"
+                  >Add to Team
+                </a>
+                <a
+                  href="/admin/edittournament/<%= obj._id%>"
+                  class="card-footer-item"
+                  >Reject to team</a
+                >
+              </footer>
+            </div>
+          </div>
+          <% } else{} }) %>
+        </div>
+
+        <% })%> <% }else { %>
+        <div class="container">
+          <h1 class="has-text-centered">NO Tournaments</h1>
+        </div>
+        <%}%>
+
+        <style>
+          #searchandinput {
+            display: none;
+          }
+          .card:hover {
+            transform: translate3D(0, -1px, 0) scale(1.03);
+          }
+          h1 {
+            font-size: xx-large;
+          }
+
+          @keyframes slideInLeft {
+            0% {
+              transform: translateY(-100%);
+            }
+            100% {
+              transform: translateY(0);
+            }
+          }
+          section {
+            animation: 1s ease-out 0s 1 slideInLeft;
+
+            padding: 40px;
+          }
+        </style>
+        <script></script>
+      </section>
+    </body>
+  </head>
+</html>

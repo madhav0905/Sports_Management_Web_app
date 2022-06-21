@@ -212,7 +212,7 @@ router.get("/show", [auth, urlencoded], async (req, res) => {
   if (!given_pattern) {
     given_pattern = "";
   }
-
+  console.log(pid);
   try {
     const user_obj = await User.findById(pid).populate({
       path: "tournament_id",
@@ -221,11 +221,13 @@ router.get("/show", [auth, urlencoded], async (req, res) => {
       populate: { path: "team_id" },
     });
     if (user_obj) {
+      ///  return res.send(user_obj.tournament_id);
       return res.render("user/show", {
         active_tab: 2,
         tournament: user_obj,
         given_pattern: given_pattern,
         moment: moment,
+        pid: pid,
       });
     }
   } catch (err) {

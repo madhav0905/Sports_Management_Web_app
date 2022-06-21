@@ -106,7 +106,6 @@ const teamschema = new mongoose.Schema({
         ref: "user",
       },
       val: { type: String },
-      default: [],
     },
   ],
 });

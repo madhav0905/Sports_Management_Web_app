@@ -18,12 +18,18 @@
               </div>
               <div class="card-content">
                 <p class="card-header-subtitle"><%= obj.sport%></p>
-                <% console.log(obj.team_id);if(obj.sport_type==="team") {%>
+                <% if(obj.sport_type==="team") {%>
                 <p>Team</p>
                 <p>Number Of Teams : <%=obj.numofteams%></p>
                 <p>Players Per Team: <%=obj.playerspteam%></p>
-
-                <p>Your Team:<%=obj.team_id[0].team_name%></p>
+                <% var teamarray=obj.team_id;var pidd=pid; %> <% let found={};
+                console.log("pid is "+pidd); teamarray.forEach((team)=> {
+                if(team.players_id.includes(pidd)) { found=team; } });
+                console.log(found); var status_team=found.ref_players.find(o=>
+                o.play_id==pid); let ans="" ; if(!status_team) {
+                ans="Permanent"; } else { ans=status_team.val; } %>
+                <p>Your Team:<%= found .team_name%></p>
+                <p>Status: <%=ans%></p>
                 <% }else {%>
                 <p>Single</p>
 

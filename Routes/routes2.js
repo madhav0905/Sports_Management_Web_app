@@ -157,6 +157,74 @@ router.get("/edit_tournament/:tid", [auth, urlencoded], async (req, res) => {
 });
 
 router.post("/store/edit_tournament", [auth, urlencoded], async (req, res) => {
-  return res.send(req.body);
+  ///return res.send(req.body);
+  const tid = req.body.tour_id;
+  try {
+    const check_tname = await Tournament.find({
+      tname: req.body.tname.trim(),
+      _id: { $nin: [tid] },
+    });
+
+    const tour_obj = await Tournament.findById(tid);
+    if (check_tname.length) {
+      return res.render("admins/edit_tournament", {
+        tournament: tour_obj,
+        given_pattern: "",
+        msg: [
+          "There is tournament already with same name i.e " +
+            req.body.tname +
+            " pls change",
+        ],
+        active_tab: 2,
+        moment: moment,
+      });
+    }
+    req.body.start_date = new Date(req.body.start_date);
+    req.body.end_date = new Date(req.body.end_date);
+    const E = req.body.end_date;
+    const S = req.body.start_date;
+
+    const all_records = await Tournament.find({
+      _id: { $nin: [tid] },
+      start_date: { $lte: E },
+      end_date: { $gte: S },
+    });
+    if (all_records.length) {
+      const errmsg =
+        "There is a tournament already in this slot from " +
+        moment(all_records[0].start_date).format("YYYY-MM-DD") +
+        " to " +
+        moment(all_records[0].end_date).format("YYYY-MM-DD");
+      return res.render("admins/edit_tournament", {
+        msg: [errmsg],
+        given_pattern: "",
+        moment: moment,
+        active_tab: 2,
+        tournament: tour_obj,
+      });
+    }
+    if (tour_obj) {
+      tour_obj.tname = req.body.tname;
+      if (tour_obj.sport_type === "single") {
+        tour_obj.number_single_player = req.body.number_single_player;
+      } else {
+        tour_obj.numofteams = req.body.numofteams;
+        tour_obj.playerspteam = req.body.playerspteam;
+      }
+      tour_obj.start_date = req.body.start_date;
+      tour_obj.end_date = req.body.end_date;
+      const final = await tour_obj.save();
+      if (final) {
+        console.log(final);
+        return res.redirect("/admin/explore");
+      } else {
+        return res.render("error", { msg: ["Server Busy Please Try again"] });
+      }
+    } else {
+      return res.render("error", { msg: ["NO TID"] });
+    }
+  } catch (err) {
+    return res.render("error", { msg: [err] });
+  }
 });
 module.exports = router;

@@ -32,3 +32,29 @@ if(refplayer.val=="pending") {
 </div>
 } else{} /* // var team_ref_array=team_req_obj.ref_players; var //
 status_obj=team_ref_array.find(o => o.play_id===pid); %> */
+<div class="level">
+  <div class="level-item has-text-centered">
+    <form action="/user/acceptrequest" method="post">
+      <input type="hidden" name="tid" value="<%=obj.tournament_id._id%>" />
+      <input type="hidden" name="created_pid" value="<%=pid%>" />
+      <input
+        type="hidden"
+        name="user_pid"
+        value="<%= refplayer.play_id._id%>"
+      />
+      <button class="button card-footer-item btn-link">Add to Team</button>
+    </form>
+  </div>
+  <div class="level-item has-has-text-centered">
+    <form action="/user/acceptrequest" method="post">
+      <input type="hidden" name="tid" value="<%=obj.tournament_id._id%>" />
+      <input type="hidden" name="created_pid" value="<%=pid%>" />
+      <input
+        type="hidden"
+        name="user_pid"
+        value="<%= refplayer.play_id._id%>"
+      />
+      <button class="button card-footer-item btn-link">Reject</button>
+    </form>
+  </div>
+</div>

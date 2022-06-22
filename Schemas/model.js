@@ -61,7 +61,6 @@ const userschema = new mongoose.Schema({
         ref: "tournament",
       },
       val: { type: String },
-      default: [],
     },
   ],
   role: {

@@ -212,7 +212,7 @@ router.get("/show", [auth, urlencoded], async (req, res) => {
   if (!given_pattern) {
     given_pattern = "";
   }
-  console.log(pid);
+
   try {
     const user_obj = await User.findById(pid).populate({
       path: "tournament_id",
@@ -245,6 +245,75 @@ router.get("/join_request", [auth, urlencoded], async (req, res) => {
     given_pattern: "",
     moment: moment,
     active_tab: 3,
+    pid: pid,
   });
+});
+router.post("/acceptrequest", [auth, urlencoded], async (req, res) => {
+  const tour_id = req.body.tid;
+  const team_id = req.body.team_id;
+  const created_user_id = req.body.created_pid;
+  const user_id = req.body.user_pid;
+  const operation = req.body.whichoperation;
+
+  try {
+    const team_obj = await Team.findById(team_id);
+
+    if (team_obj) {
+      if (operation == "add") {
+        const array_ref = team_obj.ref_players;
+
+        if (array_ref.length) {
+          const ans = array_ref.filter((o) => o.play_id != user_id);
+          console.log(ans);
+          team_obj.ref_players = ans;
+
+          const temp_ans = await team_obj.save();
+          if (temp_ans) {
+            return res.redirect("/user/join_request");
+          }
+        } else {
+          return res.render("error", { msg: ["have to debug"] });
+        }
+      } else if (operation == "reject") {
+        const array_ref = team_obj.ref_players;
+        const ans = array_ref.findIndex((o) => o.play_id == user_id);
+        if (ans != -1) {
+          team_obj.ref_players[ans] = { play_id: user_id, val: "rejected" };
+        }
+
+        team_obj.vacancies++;
+        const ind = team_obj.players_id.indexOf(user_id);
+
+        if (ind > -1) {
+          team_obj.players_id.splice(ind, 1);
+        }
+
+        const result = await team_obj.save();
+        const user_data = await User.findById(user_id);
+        if (user_data) {
+          var te_id = user_data.team_id.indexOf(team_id);
+          if (te_id > -1) {
+            user_data.team_id.splice(te_id, 1);
+          }
+          var to_id = user_data.tournament_id.indexOf(tour_id);
+          if (to_id > -1) {
+            user_data.tournament_id.splice(to_id, 1);
+          }
+          var i = user_data.pstatus.findIndex((o) => o.tou_id == tour_id);
+          if (i > -1) {
+            user_data.pstatus.splice(i, 1);
+          }
+          const k = await user_data.save();
+          if (k && result) {
+            return res.redirect("/user/join_request");
+          }
+        }
+      }
+    } else {
+      return res.render("error", { msg: ["Try Again"] });
+    }
+  } catch (err) {
+    return res.render("error", { msg: [err] });
+  }
 });
 module.exports = router;

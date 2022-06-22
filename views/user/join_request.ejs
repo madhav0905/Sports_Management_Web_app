@@ -4,13 +4,16 @@
     <title>Explore</title>
     <%- include("../partials/heading") %>
     <body>
-      <%- include("../partials/user_nav")%> <% if(team_obj.length){%> <%
-      team_obj.forEach(obj => { var x =
+      <%- include("../partials/user_nav")%> <% if(team_obj.length){%> <% var
+      actual_cnt=team_obj.length;var cnt=0; team_obj.forEach(obj => { var x =
       moment(obj.start_date).format("YYYY-MM-DD"); var y =
-      moment(obj.end_date).format("YYYY-MM-DD");%>
+      moment(obj.end_date).format("YYYY-MM-DD");%> <% var flag; const
+      temp_arr=obj.ref_players.filter(o=> o.val=="pending"); if(temp_arr.length)
+      { flag=1; } else { flag=0;cnt++; } if(flag){ %>
       <section class="section m-0 has-text-centered">
         <h1><%= obj.tournament_id.tname%> <%= obj.team_name%></h1>
         <br />
+
         <div class="columns is-multiline">
           <% obj.ref_players.forEach(refplayer => {;
           if(refplayer.val=="pending") {%>
@@ -29,30 +32,63 @@
                 <p>start_date :<%= x %></p>
                 <p>end_date :<%= y %></p>
               </div>
-              <footer class="card-footer">
-                <a
-                  href="/admin/tournament/<%= obj._id%>"
-                  class="card-footer-item"
-                  >Add to Team
-                </a>
-                <a
-                  href="/admin/edittournament/<%= obj._id%>"
-                  class="card-footer-item"
-                  >Reject to team</a
+
+              <form
+                action="/user/acceptrequest"
+                method="post"
+                class="card-footer"
+              >
+                <input type="hidden" name="team_id" value="<%= obj._id%>" />
+                <input
+                  type="hidden"
+                  name="tid"
+                  value="<%=obj.tournament_id._id%>"
+                />
+                <input type="hidden" name="created_pid" value="<%=pid%>" />
+                <input
+                  type="hidden"
+                  name="user_pid"
+                  value="<%= refplayer.play_id._id%>"
+                />
+                <input
+                  type="hidden"
+                  name="whichoperation"
+                  id="<%= refplayer.play_id._id+obj.tournament_id._id%>"
+                />
+                <button
+                  class="button btn-link card-footer-item"
+                  onClick="which_one('<%= refplayer.play_id._id+obj.tournament_id._id%>')"
                 >
-              </footer>
+                  Add
+                </button>
+
+                <button
+                  class="button btn-link card-footer-item"
+                  onClick="which_two('<%= refplayer.play_id._id+obj.tournament_id._id%>')"
+                >
+                  Reject
+                </button>
+              </form>
             </div>
           </div>
           <% } else{} }) %>
         </div>
-
-        <% })%> <% }else { %>
+        <% }else{ }%> <% })%> <% }else { %>
         <div class="container">
           <h1 class="has-text-centered">NO requests</h1>
         </div>
-        <%}%>
+        <%} if(cnt==actual_cnt) {%>
+
+        <div class="container">
+          <h1 class="has-text-centered">NO requests</h1>
+        </div>
+
+        <% }%>
 
         <style>
+          .card-footer-item {
+            height: min-content;
+          }
           #searchandinput {
             display: none;
           }
@@ -76,8 +112,22 @@
 
             padding: 40px;
           }
+          .btn-link {
+            background: none;
+            border: none;
+
+            color: #3097d1;
+            font: inherit;
+          }
         </style>
-        <script></script>
+        <script>
+          function which_one(x) {
+            document.getElementById(x).value = "add";
+          }
+          function which_two(x) {
+            document.getElementById(x).value = "reject";
+          }
+        </script>
       </section>
     </body>
   </head>

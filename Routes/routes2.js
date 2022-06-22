@@ -6,8 +6,7 @@ const path = require("path");
 const auth = require("../Middleware/auth");
 const mongoose = require("mongoose");
 const moment = require("moment");
-//const { User, Post, Comment } = require("./Schemas/models");
-//const validate = require("./Schemas/validate");
+
 const coo = require("cookie-parser");
 router.use(coo("radno,e"));
 require("dotenv").config();
@@ -136,5 +135,28 @@ router.get("/tournament/:id", [auth, urlencoded], async (req, res) => {
   } catch (err) {
     return res.render("error", { msg: ["TRY AGAIN"] });
   }
+});
+router.get("/edit_tournament/:tid", [auth, urlencoded], async (req, res) => {
+  const tid = req.params.tid;
+  try {
+    const tour_obj = await Tournament.findById(tid);
+    if (tour_obj) {
+      return res.render("admins/edit_tournament", {
+        tournament: tour_obj,
+        given_pattern: "",
+        msg: [""],
+        active_tab: 2,
+        moment: moment,
+      });
+    } else {
+      return res.render("error", { msg: ["wrong tournament id"] });
+    }
+  } catch (err) {
+    return res.render("error", { msg: [err] });
+  }
+});
+
+router.post("/store/edit_tournament", [auth, urlencoded], async (req, res) => {
+  return res.send(req.body);
 });
 module.exports = router;

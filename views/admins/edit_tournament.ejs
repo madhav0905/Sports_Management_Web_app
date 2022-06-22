@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Explore</title>
+    <%- include("../partials/heading") %>
+    <body>
+      <%- include("../partials/admin_nav")%>
+      <section class="section">
+      <div class="container is-widescreen m-4">
+        <div class="columns is-mobile">
+  <div class="column is-three-fifths is-offset-one-fifth m-2">
+    <div class="box m-4">
+        <%var z =
+          moment(tournament.start_date).format("YYYY-MM-DD"); var y =
+          moment(tournament.end_date).format("YYYY-MM-DD");%>
+<h1 class="title has-text-centered">Edit Tournament</h1>
+<form id="myform" action="/admin/store/edit_tournament" method="post" onSubmit="return validate()">
+    <input type="hidden" name="tour_id" value="<%= tournament._id%>">
+    <input type="hidden" name="sport_type" id="sport_type" value="<%=tournament.sport_type%>">
+<div class="field">
+   <label class="label">Name Of Tournament<span id="star">*</span></label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input " type="text" placeholder="Tournament name" name="tname" required value="<%= tournament.tname %> ">
+    <span class="icon is-small is-left">
+      <i class="fa fa-info"></i>
+    </span>
+    <small></small>
+    </div>
+    </div>
+<div class="field">
+   <label class="label">Sport Of Tournament  <span id="star">  -</span><%= tournament.sport%></label>
+
+    </div>
+    <div class="field">
+   <label class="label">Sport Type<span id="star"> -  </span>
+
+<% var x=tournament.sport_type; if(x=='single'){ %> 
+Single
+<%}else { %>
+ Team
+    <%}%>
+
+</label>
+
+    </div>
+   
+<% var x=tournament.sport_type;  if(x==='single'){ %>
+ <div class="field" id="for_single" >
+   <label class="label">Number of Players for Single Tournament<span id="star">*</span></label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input " type="number" placeholder="Max Number of Participants" min="<%=tournament.number_single_player%>" name="number_single_player" value="<%=tournament.number_single_player%>" >
+    <span class="icon is-small is-left">
+      <i class="fa fa-info"></i>
+    </span>
+     <small></small>
+    </div>
+    </div>
+
+<% } else{ %>
+<div class="field" id="for_team">
+   <label class="label">Number of Teams<span id="star">*</span></label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input " type="number" placeholder="Number of Teams " name="numofteams" min=<%=tournament.numofteams%> value="<%=tournament.numofteams%>" >
+    <span class="icon is-small is-left">
+      <i class="fa fa-info"></i>
+    </span>
+     <small></small>
+    </div>
+    </div>
+ <div class="field" id="for_team_players">
+   <label class="label">Number of Players Per Team<span id="star">*</span></label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input " type="number" placeholder="Number of Players per Team" name="playerspteam" min=<%=tournament.playerspteam%> value="<%=tournament.playerspteam%>">
+    <span class="icon is-small is-left">
+      <i class="fa fa-info"></i>
+    </span>
+     <small></small>
+    </div>
+    </div>
+<%}%>
+
+
+   
+    
+ <div class="field" >
+   <label class="label">Start Date<span id="star">*</span></label>
+  <div class="control has-icons-left has-icons-right">
+    <% var min_date=moment().format('YYYY-MM-DD')%>
+    <input class="input " type="date" min=<%=min_date%> placeholder="Start Date of Tournament" name="start_date" value="<%= z %>" required>
+    <span class="icon is-small is-left">
+      <i class="fa fa-info"></i>
+    </span>
+     <small></small>
+    </div>
+    </div>
+ <div class="field" >
+   <label class="label">End Date<span id="star">*</span></label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input " type="date" min=<%=min_date%> placeholder="End Date of Tournament" name="end_date" value="<%=y%>" required>
+    <span class="icon is-small is-left">
+      <i class="fa fa-info"></i>
+    </span>
+     <small></small>
+    </div>
+    </div>
+    <div class="field mb-0">
+                    <p class="has-text-red" style="color: red;" id="err_dis" ></p>
+                  </div>
+                   <% msg.forEach(m => { %>
+                  <h2 class="has-text-danger"><%= m %></h2>
+                  <%})%>
+     <div class="field has-text-centered mb-0">
+            
+                    <input type="submit" class="button is-success" value="Submit">
+                  </div>
+
+
+</form>
+
+
+
+
+
+
+
+    </div>
+  </div>
+</div>
+</section>
+    </body>
+  </head>
+<script src="/js/edit_validate.js"></script>
+  <style>
+   
+    #star
+    {
+        color: red;
+    }
+    #searchandinput
+    {
+      display: none;
+    }
+    small
+    {
+      color: red;
+      font-size: small;
+    }
+       @keyframes slideInLeft {
+          0% {
+            transform: translateY(-100%);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
+        section {
+          animation: 1s ease-out 0s 1 slideInLeft;
+
+          padding: 40px;
+        }
+  </style>
+</html>

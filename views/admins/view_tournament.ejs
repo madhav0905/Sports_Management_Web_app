@@ -5,33 +5,128 @@
     <%- include("../partials/heading") %>
     <body>
       <%- include("../partials/admin_nav")%>
-      <section class="section has-border-1">
+      <section class="section has-border-1 m-2">
+        <% var status_array=['Active','Win','Lose','Disqualify']%>
         <% if(tournament){%>
-        <div class="block p-1">
+        <div class="block">
           <h1 class="title has-text-centered has-text-info">
             <%=tournament.tname%>
           </h1>
-          <h1 class="subtitle has-text-centered has-text-weight-semibold">
+          <h1 class="has-text-centered has-text-weight-semibold">
             <%=tournament.sport%>
           </h1>
+
+          <% if(tournament.sport_type==='single'){ %>
+              <h1 class="has-text-centered has-text-weight-semibold">
+            Actual Number of Players- <%=tournament.number_single_player%>
+          </h1>
+          <h1 class="has-text-centered has-text-weight-semibold">
+            Current Number of Players- <%=tournament.curr_num_teams%>
+          </h1>
         </div>
-        <% if(tournament.sport_type==='single'){ %> <% }else{ %> <%
-        if(tournament.team_id.length){ tournament.team_id.forEach(obj =>{ %>
+         <% if(tournament.pid.length) {%>
+            <form  post="method" action=""></form>
+          <div class="columns is-multiline">
+             
+           <% tournament.pid.forEach(obj=> {  %> 
+        <div class="column is-one-quarter" >
+ <div class="card">
+              <div class="card-header">
+                <p class="card-header-title is-centered"><%= obj.name%></p>
+              </div>
+             
+
+             <div class="card-content">
+                <div class="level">
+                  
+                <div class=" level-item">
+                    <p class="control">
+              <label class="is-size-6" >Status:&nbsp;</label>
+  <div class="select is-size-7-desktop " >
+    <select name="select_status ">
+                 <%  
+                        var pstatus_obj={};
+                        obj.pstatus.forEach(o =>{
+    
+                if(o.tou_id.equals(tournament._id))
+                            {
+                            
+                              pstatus_obj=o;
+                             
+                            }
+                            else
+                            {
+
+                            }
+
+                        })
+
+                        console.log(pstatus_obj.val);
+                        var status_val=pstatus_obj.val;
+                for ( var i = 0; i < status_array.length; i++ )
+{
+    var selected = ( status_val == status_array[i] ) ? "selected" : "";
+    %><option value="<%=status_array[ i ] %>" <%=selected %>><%=status_array[i] %></option><%
+}
+%>
+    </select>
+  </div>
+  </p>
+</div>
+</div>
+            </div>
+          
+             
+              
+             
+            </div>
+
+
+
+
+        </div>
+            <%})%>
+             </div>   
+            <div class="container has-text-centered">
+            <button class="button is-success ">Update Changes</button>
+           </div>
+          <%}%>
+        
+      
+        </form>
+               
+            
+            
+            
+            
+            
+            
+            <% }else{ %>
+          <h1 class="has-text-centered has-text-weight-semibold">
+            Actual Number of Teams- <%=tournament.numofteams%>
+          </h1>
+          <h1 class="has-text-centered has-text-weight-semibold">
+            Current Number of Teams- <%=tournament.curr_num_teams%>
+          </h1>
+        </div>
+        <% if(tournament.team_id.length){ tournament.team_id.forEach(obj =>{ %>
         <div class="box">
           <div class="level">
             <div class="level-left has-text-centered">
               <div class="level-item">
-                <p class="subtitle"><%=obj.team_name%></p>
+                <div class="container">
+                  <p class="subtitle is-capitalized"><%=obj.team_name%></p>
+                  <p>Players Per Team : &nbsp;<%=obj.req_num%></p>
+                  <p>Vacancies left: &nbsp;<%=obj.vacancies%></p>
+                  <p>Captain: &nbsp;<%=obj.created_player_id.name%></p>
+                </div>
               </div>
             </div>
             <div class="level-item has-text-centered">
               <div class="container">
-                <p>Players Per Team : &nbsp;<%=obj.req_num%></p>
-                <p>Vacancies left: &nbsp;<%=obj.vacancies%></p>
-                <p>Captain: &nbsp;<%=obj.created_player_id.name%></p>
-                <br />
+                <p class="has-text-weight-semibold">Players:</p>
                 <% obj.players_id.forEach(play_obj=>{%>
-                <p>Player Name :&nbsp; <%=play_obj.name%></p>
+                <p class="has-text-weight-medium">&nbsp; <%=play_obj.name%></p>
 
                 <% })%>
               </div>
@@ -39,14 +134,24 @@
             <div class="level-right">
               <div class="level-item">
                 <p>Status:&nbsp;&nbsp;</p>
-                <div class="select">
-                  <select>
-                    <option selected>Active</option>
-                    <option>Win</option>
-                    <option>Lose</option>
-                    <option>Dis Qualify</option>
-                  </select>
-                </div>
+                <form action="" method="post">
+                  <div class="select is-small">
+                    <select class="is-small" >
+                        <%
+                        
+                        var status_val=obj.status;
+                for ( var i = 0; i < status_array.length; i++ )
+{
+    var selected = ( status_val == status_array[i] ) ? "selected" : "";
+    %><option value="<%=status_array[ i ] %>" <%=selected %>><%=status_array[i] %></option><%
+}
+%>
+                    </select>
+                  </div>
+                  <button class="button is-small is-success">
+                    Update Status
+                  </button>
+                </form>
               </div>
             </div>
           </div>

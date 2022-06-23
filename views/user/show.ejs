@@ -27,28 +27,19 @@
                 if(team.players_id.includes(pidd)) { found=team; } });
                 console.log(found); var status_team=found.ref_players.find(o=>
                 o.play_id==pid); let ans="" ; if(!status_team) {
-                ans="Permanent"; } else { ans=status_team.val; } %>
+                ans="Registered"; } else { ans=status_team.val; } %>
                 <p>Your Team:<%= found .team_name%></p>
                 <p>Status: <%=ans%></p>
                 <% }else {%>
                 <p>Single</p>
 
                 <p>Players : <%=obj.number_single_player%></p>
-
+                <p>Status: Registered</p>
                 <% } %>
 
                 <p>start_date :<%= x %></p>
                 <p>end_date :<%= y %></p>
               </div>
-              <footer class="card-footer">
-                <a
-                  href="/admin/tournament/<%= obj._id%>"
-                  class="card-footer-item"
-                  >Check Info</a
-                >
-                <a href="#" class="card-footer-item">Edit</a>
-                <a href="#" class="card-footer-item">Delete</a>
-              </footer>
             </div>
           </div>
           <% })%> <% }else { %>
@@ -64,6 +55,19 @@
         }
         h1 {
           font-size: xx-large;
+        }
+        @keyframes slideInLeft {
+          0% {
+            transform: translateY(-100%);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
+        section {
+          animation: 1s ease-out 0s 1 slideInLeft;
+
+          padding: 40px;
         }
       </style>
       <script></script>

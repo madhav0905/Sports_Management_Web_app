@@ -35,9 +35,9 @@
                 <div class="control has-icons-left">
                   <form action="#" method="get">
                 <% if(given_pattern==="") {%>
-                <input type="search" name="search" class="input" id="a">
+                <input type="search" name="search" class="input" id="a" placeholder="Search by Tournament Name">
                 <%} else {%>
-               <input type="search" name="search" class="input" id="a" value="<%= given_pattern %>">
+               <input type="search" name="search" class="input" id="a" value="<%= given_pattern %>"  placeholder="Search by Tournament Name">
                <% }%> 
                 <span class="icon is-left"><i class="fa fa-search"></i></span>
                 </div>

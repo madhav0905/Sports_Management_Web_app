@@ -112,7 +112,7 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
           user_obj.tournament_id.push(tid);
           data.curr_num_teams += 1;
           data.pid.push(user_obj._id);
-          user_obj.pstatus.push({ toud_id: tid, val: "Active" });
+          user_obj.pstatus.push({ tou_id: tid, val: "Active" });
           const user_save = await user_obj.save();
           const tour_save = await data.save();
           if (user_save && tour_save) {
@@ -128,6 +128,10 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
                })
                */
         } else {
+          data.status_tournament = "Closed";
+          const t_result = await data.save();
+          if (t_result) {
+          }
           return res.send("max participants registered Sorrry");
         }
       } else if (select_type == "choose") {
@@ -143,7 +147,7 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
               .then((team_data) => {
                 user_obj.team_id.push(team_data._id);
                 user_obj.tournament_id.push(tid);
-                user_obj.pstatus.push({ tour_id: tid, val: team_data.status });
+                user_obj.pstatus.push({ tou_id: tid, val: team_data.status });
                 user_obj
                   .save()
                   .then((fin_res) => {
@@ -182,7 +186,7 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
                 user_obj.team_id.push(result._id);
                 user_obj.tournament_id.push(tid);
                 user_obj.teams_created_id.push(result._id);
-                user_obj.pstatus.push({ toud_id: tid, val: result.status });
+                user_obj.pstatus.push({ tou_id: tid, val: result.status });
                 const data = await user_obj.save();
                 if (data) {
                   return res.redirect("/user/explore");

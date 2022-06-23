@@ -7,7 +7,7 @@
       <%- include("../partials/user_nav")%> <% if(team_obj.length){%> <% var
       actual_cnt=team_obj.length;var cnt=0; team_obj.forEach(obj => { var x =
       moment(obj.start_date).format("YYYY-MM-DD"); var y =
-      moment(obj.end_date).format("YYYY-MM-DD");%> <% var flag; const
+      moment(obj.end_date).format("YYYY-MM-DD");%> <% var flag;var g=1; const
       temp_arr=obj.ref_players.filter(o=> o.val=="pending"); if(temp_arr.length)
       { flag=1; } else { flag=0;cnt++; } if(flag){ %>
       <section class="section m-0 has-text-centered">
@@ -73,11 +73,11 @@
           </div>
           <% } else{} }) %>
         </div>
-        <% }else{ }%> <% })%> <% }else { %>
+        <% }else{ }%> <% })%> <% }else { g=0; %>
         <div class="container">
           <h1 class="has-text-centered">NO requests</h1>
         </div>
-        <%} if(cnt==actual_cnt) {%>
+        <%} if(cnt==actual_cnt && g) {%>
 
         <div class="container">
           <h1 class="has-text-centered">NO requests</h1>
@@ -108,6 +108,11 @@
             }
           }
           section {
+            animation: 1s ease-out 0s 1 slideInLeft;
+
+            padding: 40px;
+          }
+          .container {
             animation: 1s ease-out 0s 1 slideInLeft;
 
             padding: 40px;

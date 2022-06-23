@@ -243,6 +243,7 @@ router.post("/store/edit_tournament", [auth, urlencoded], async (req, res) => {
       }
       tour_obj.start_date = req.body.start_date;
       tour_obj.end_date = req.body.end_date;
+      tour_obj.status_tournament = req.body.status;
       const final = await tour_obj.save();
       if (final) {
         console.log(final);
@@ -257,5 +258,48 @@ router.post("/store/edit_tournament", [auth, urlencoded], async (req, res) => {
     return res.render("error", { msg: [err] });
   }
 });
+router.post("/update_status", [auth, urlencoded], async (req, res) => {
+  const teamid = req.body.teamid;
+  try {
+    const team_obj = await Team.findById(teamid).populate(["tournament_id"]);
+    if (team_obj) {
+      const tour_id = team_obj.tournament_id._id;
+      team_obj.status = req.body.ans;
+      team_obj.players_id.forEach(async (o) => {
+        const user_obj = await User.findById(o);
+        if (user_obj) {
+          let past_obj = -1;
+          for (var i = 0; i < user_obj.pstatus.length; i++) {
+            if (user_obj.pstatus[i].tou_id.equals(tour_id)) {
+              past_obj = i;
+            }
+          }
 
+          if (past_obj > -1) {
+            user_obj.pstatus[past_obj].val = req.body.ans;
+          } else {
+            return res.render("error", { msg: ["Not per user"] });
+          }
+          const result = user_obj.save();
+          if (!result) {
+            return res.render("error", {
+              msg: ["Server Busy Try again later"],
+            });
+          }
+        }
+      });
+
+      const main_result = await team_obj.save();
+      if (main_result) {
+        return res.send(main_result);
+      } else {
+        return res.render("error", { msg: ["Server Busy Try again later"] });
+      }
+    } else {
+      return res.render("error", { msg: ["Wrong Team Id"] });
+    }
+  } catch (err) {
+    return res.render("error", { msg: [err] });
+  }
+});
 module.exports = router;

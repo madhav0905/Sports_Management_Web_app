@@ -4,10 +4,10 @@
     <title>Explore</title>
     <%- include("../partials/heading") %>
     <body>
-      <%- include("../partials/user_nav")%> <% if(team_obj.length){%> <% var
-      actual_cnt=team_obj.length;var cnt=0; team_obj.forEach(obj => { var x =
-      moment(obj.start_date).format("YYYY-MM-DD"); var y =
-      moment(obj.end_date).format("YYYY-MM-DD");%> <% var flag;var g=1; const
+      <%- include("../partials/user_nav")%> <%var g=1; if(team_obj.length){%> <%
+      var actual_cnt=team_obj.length;var cnt=0; team_obj.forEach(obj => { var x
+      = moment(obj.start_date).format("YYYY-MM-DD"); var y =
+      moment(obj.end_date).format("YYYY-MM-DD");%> <% var flag; const
       temp_arr=obj.ref_players.filter(o=> o.val=="pending"); if(temp_arr.length)
       { flag=1; } else { flag=0;cnt++; } if(flag){ %>
       <section class="section m-0 has-text-centered">

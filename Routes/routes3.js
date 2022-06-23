@@ -113,6 +113,9 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
           data.curr_num_teams += 1;
           data.pid.push(user_obj._id);
           user_obj.pstatus.push({ tou_id: tid, val: "Active" });
+          if (data.number_single_player - data.curr_num_teams == 0) {
+            data.status_tournament = "Closed";
+          }
           const user_save = await user_obj.save();
           const tour_save = await data.save();
           if (user_save && tour_save) {
@@ -128,10 +131,6 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
                })
                */
         } else {
-          data.status_tournament = "Closed";
-          const t_result = await data.save();
-          if (t_result) {
-          }
           return res.send("max participants registered Sorrry");
         }
       } else if (select_type == "choose") {
@@ -140,6 +139,7 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
         Team.findById(which_team).then((data) => {
           if (data.vacancies > 0) {
             data.vacancies--;
+
             data.players_id.push(pid);
             data.ref_players.push({ play_id: pid, val: "pending" });
             data
@@ -182,6 +182,9 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
               if (result) {
                 tour_obj.team_id.push(result._id);
                 tour_obj.curr_num_teams += 1;
+                if (tour_obj.curr_num_teams == tour_obj.numofteams) {
+                  tour_obj.status = "Closed";
+                }
                 const final_res = await tour_obj.save();
                 user_obj.team_id.push(result._id);
                 user_obj.tournament_id.push(tid);
@@ -268,7 +271,7 @@ router.post("/acceptrequest", [auth, urlencoded], async (req, res) => {
 
         if (array_ref.length) {
           const ans = array_ref.filter((o) => o.play_id != user_id);
-          console.log(ans);
+
           team_obj.ref_players = ans;
 
           const temp_ans = await team_obj.save();
@@ -284,7 +287,6 @@ router.post("/acceptrequest", [auth, urlencoded], async (req, res) => {
         if (ans != -1) {
           team_obj.ref_players[ans] = { play_id: user_id, val: "rejected" };
         }
-
         team_obj.vacancies++;
         const ind = team_obj.players_id.indexOf(user_id);
 

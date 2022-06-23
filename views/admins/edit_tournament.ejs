@@ -79,7 +79,31 @@ Single
     </div>
 <%}%>
 
+<div class="field">
+  <label  class="label">Status of Tournament:<span id="star">*</span></label>
+<div class="select">
+  <select name="status" >
 
+
+             <%   
+             var status_array=['Active','Closed'];
+                  var status_val=tournament.status_tournament;
+                for ( var i = 0; i < status_array.length; i++ )
+{
+    var selected = ( status_val == status_array[i] ) ? "selected" : "";
+    %><option value="<%=status_array[ i ] %>" <%=selected %>><%=status_array[i] %></option><%
+}
+
+%>
+
+
+  </select>
+</div>
+
+
+
+
+</div>
    
     
  <div class="field" >

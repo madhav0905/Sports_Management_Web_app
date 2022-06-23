@@ -61,7 +61,7 @@
 
                         })
 
-                        console.log(pstatus_obj.val);
+                    
                         var status_val=pstatus_obj.val;
                 for ( var i = 0; i < status_array.length; i++ )
 {
@@ -134,9 +134,10 @@
             <div class="level-right">
               <div class="level-item">
                 <p>Status:&nbsp;&nbsp;</p>
-                <form action="" method="post">
+                <form action="/admin/update_status" method="post">
+                  <input type="hidden" value="<%=obj._id%>" name="teamid">
                   <div class="select is-small">
-                    <select class="is-small" >
+                    <select class="is-small"  id="<%=obj._id%>" name="ans">
                         <%
                         
                         var status_val=obj.status;
@@ -169,6 +170,19 @@
         transform: translate3D(0, -1px, 0) scale(1.03);
         cursor: pointer;
       }
+       @keyframes slideInLeft {
+          0% {
+            transform: translateY(-100%);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
+        section {
+          animation: 1s ease-out 0s 1 slideInLeft;
+
+          padding: 40px;
+        }
     </style>
   </head>
 </html>

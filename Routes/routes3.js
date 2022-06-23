@@ -112,7 +112,7 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
           user_obj.tournament_id.push(tid);
           data.curr_num_teams += 1;
           data.pid.push(user_obj._id);
-          user_obj.pstatus.push({ toud_id: tid, val: "active" });
+          user_obj.pstatus.push({ toud_id: tid, val: "Active" });
           const user_save = await user_obj.save();
           const tour_save = await data.save();
           if (user_save && tour_save) {

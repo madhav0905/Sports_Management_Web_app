@@ -123,11 +123,41 @@ router.post("/store", [auth, urlencoded], async (req, res) => {
 router.get("/tournament/:id", [auth, urlencoded], async (req, res) => {
   const tid = req.params["id"];
   try {
-    const obj = await Tournament.findById(tid);
+    const obj = await Tournament.findById(tid).populate([
+      {
+        path: "team_id",
+        populate: [{ path: "players_id" }, { path: "created_player_id" }],
+      },
+      { path: "pid" },
+    ]);
     if (obj) {
+      return res.send(obj);
       return res.render("/admins/view_tournament", {
         tournament: obj,
         given_pattern: "",
+      });
+    } else {
+      return res.render("error", { msg: ["Wrong Id"] });
+    }
+  } catch (err) {
+    return res.render("error", { msg: ["TRY AGAIN"] });
+  }
+});
+router.get("/tournaments/:id", [auth, urlencoded], async (req, res) => {
+  const tid = req.params["id"];
+  try {
+    const obj = await Tournament.findById(tid).populate([
+      {
+        path: "team_id",
+        populate: [{ path: "players_id" }, { path: "created_player_id" }],
+      },
+      { path: "pid" },
+    ]);
+    if (obj) {
+      return res.render("admins/view_tournament", {
+        tournament: obj,
+        given_pattern: "",
+        active_tab: 2,
       });
     } else {
       return res.render("error", { msg: ["Wrong Id"] });
@@ -227,4 +257,5 @@ router.post("/store/edit_tournament", [auth, urlencoded], async (req, res) => {
     return res.render("error", { msg: [err] });
   }
 });
+
 module.exports = router;

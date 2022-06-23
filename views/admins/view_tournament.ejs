@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Tournament Info</title>
+    <%- include("../partials/heading") %>
+    <body>
+      <%- include("../partials/admin_nav")%>
+      <section class="section has-border-1">
+        <% if(tournament){%>
+        <div class="block p-1">
+          <h1 class="title has-text-centered has-text-info">
+            <%=tournament.tname%>
+          </h1>
+          <h1 class="subtitle has-text-centered has-text-weight-semibold">
+            <%=tournament.sport%>
+          </h1>
+        </div>
+        <% if(tournament.sport_type==='single'){ %> <% }else{ %> <%
+        if(tournament.team_id.length){ tournament.team_id.forEach(obj =>{ %>
+        <div class="box">
+          <div class="level">
+            <div class="level-left has-text-centered">
+              <div class="level-item">
+                <p class="subtitle"><%=obj.team_name%></p>
+              </div>
+            </div>
+            <div class="level-item has-text-centered">
+              <div class="container">
+                <p>Players Per Team : &nbsp;<%=obj.req_num%></p>
+                <p>Vacancies left: &nbsp;<%=obj.vacancies%></p>
+                <p>Captain: &nbsp;<%=obj.created_player_id.name%></p>
+                <br />
+                <% obj.players_id.forEach(play_obj=>{%>
+                <p>Player Name :&nbsp; <%=play_obj.name%></p>
+
+                <% })%>
+              </div>
+            </div>
+            <div class="level-right">
+              <div class="level-item">
+                <p>Status:&nbsp;&nbsp;</p>
+                <div class="select">
+                  <select>
+                    <option selected>Active</option>
+                    <option>Win</option>
+                    <option>Lose</option>
+                    <option>Dis Qualify</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% })}else{ %>
+        <h1>No Teams Registered</h1>
+        <% } %> <% } %> <% }else{ %> <% } %>
+      </section>
+    </body>
+    <style>
+      #searchandinput {
+        display: none;
+      }
+      .box:hover {
+        transform: translate3D(0, -1px, 0) scale(1.03);
+        cursor: pointer;
+      }
+    </style>
+  </head>
+</html>

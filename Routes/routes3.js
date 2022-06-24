@@ -102,6 +102,7 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
   const select_type = req.body.select_type;
   try {
     const user_obj = await User.findById(pid);
+
     if (user_obj) {
       if (user_obj.tournament_id.includes(tid)) {
         return res.send("already registered");
@@ -136,30 +137,53 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
       } else if (select_type == "choose") {
         //existing team
         const which_team = req.body.chooseteam;
-        Team.findById(which_team).then((data) => {
+        const data = await Team.findById(which_team);
+        if (data) {
           if (data.vacancies > 0) {
             data.vacancies--;
 
             data.players_id.push(pid);
             data.ref_players.push({ play_id: pid, val: "pending" });
-            data
-              .save()
-              .then((team_data) => {
-                user_obj.team_id.push(team_data._id);
-                user_obj.tournament_id.push(tid);
-                user_obj.pstatus.push({ tou_id: tid, val: team_data.status });
-                user_obj
-                  .save()
-                  .then((fin_res) => {
-                    return res.redirect("/user/explore");
-                  })
-                  .catch(() => res.render("error", { msg: ["Try again"] }));
-              })
-              .catch(() => res.render("error", { msg: ["Try again"] }));
+            //changing status
+
+            const team_data = await data.save();
+            const tour_obj = await Tournament.findById(tid).populate("team_id");
+            if (team_data && tour_obj) {
+              if (tour_obj.curr_num_teams == tour_obj.numofteams) {
+                const team_id_array = tour_obj.team_id;
+                var flag = -1;
+                for (var i = 0; i < team_id_array.length; i++) {
+                  if (team_id_array[i].vacancies != 0) {
+                    flag = 1;
+                    break;
+                  }
+                }
+                if (flag == -1) {
+                  //status closed;
+                  tour_obj.status_tournament = "Closed";
+                }
+              } else {
+                tour_obj.status_tournament = "Active";
+              }
+            }
+            const tour_res = await tour_obj.save();
+            if (team_data && tour_res) {
+              user_obj.team_id.push(team_data._id);
+              user_obj.tournament_id.push(tid);
+              user_obj.pstatus.push({ tou_id: tid, val: team_data.status });
+              user_obj
+                .save()
+                .then((fin_res) => {
+                  return res.redirect("/user/explore");
+                })
+                .catch(() => res.render("error", { msg: ["Try again"] }));
+            } else {
+              return res.render("error", { msg: ["Try again"] });
+            }
           } else {
             return res.send("Team has no positions left");
           }
-        });
+        }
 
         //find team
       } else {
@@ -182,9 +206,7 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
               if (result) {
                 tour_obj.team_id.push(result._id);
                 tour_obj.curr_num_teams += 1;
-                if (tour_obj.curr_num_teams == tour_obj.numofteams) {
-                  tour_obj.status = "Closed";
-                }
+
                 const final_res = await tour_obj.save();
                 user_obj.team_id.push(result._id);
                 user_obj.tournament_id.push(tid);

@@ -21,8 +21,10 @@ function toggle_in_out() {
     pointer_submit.value = "Create And Register";
   }
 }
+document.getElementById("error_class").style.display = "none";
 
 var options = document.getElementById("choose_team").options;
+
 if (options.length == 0) {
   let pointer_select = document.getElementById("select_type");
   let pointer_chooseteam = document.getElementById("chooseteam");
@@ -36,6 +38,28 @@ if (options.length == 0) {
   pointer_submit.value = "Create And Register";
   document.getElementById("noteam").innerText =
     "No teams available Please Create a Team";
+}
+
+var can_create_team = document.getElementById("forstatus").value;
+console.log(can_create_team);
+if (can_create_team == 0) {
+  let pointer_select = document.getElementById("select_type");
+  let pointer_chooseteam = document.getElementById("chooseteam");
+  let pointer_createteam = document.getElementById("createteam");
+  let pointer_submit = document.getElementById("submit");
+  pointer_select.options[1].disabled = true;
+
+  document.getElementById("val_create_name").required = false;
+  if (pointer_select.options[0].disabled) {
+    pointer_createteam.style.display = "none";
+
+    pointer_chooseteam.style.display = "none";
+    document.getElementById("main_id").style.display = "none";
+    document.getElementById("submit").style.display = "none";
+    document.getElementById("error_class").style.display = "block";
+  }
+  // pointer_createteam.style.display = "none";
+  document.getElementById("cant_create_team").innerText = "sorry No ";
 }
 var inputs = document.getElementsByTagName("input");
 for (i = 0; i < inputs.length; i++) {

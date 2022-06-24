@@ -30,11 +30,12 @@
                 <p></p>
                 <p></p>
                 <% } %>
-
+                <p>Tournament Status: <%=obj.status_tournament%></p>
                 <p>start_date :<%= x %></p>
                 <p>end_date :<%= y %></p>
               </div>
               <footer class="card-footer">
+                <% if(obj.status_tournament!="Cancelled") {%>
                 <a
                   href="/admin/tournaments/<%= obj._id%>"
                   class="card-footer-item"
@@ -44,8 +45,7 @@
                   href="/admin/edit_tournament/<%= obj._id%>"
                   class="card-footer-item"
                   >Modify</a
-                >
-                <a href="#" class="card-footer-item">Delete</a>
+                ><%}%>
               </footer>
             </div>
           </div>

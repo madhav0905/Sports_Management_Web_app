@@ -23,9 +23,8 @@
                 <p>Number Of Teams : <%=obj.numofteams%></p>
                 <p>Players Per Team: <%=obj.playerspteam%></p>
                 <% var teamarray=obj.team_id;var pidd=pid; %> <% let found={};
-                console.log("pid is "+pidd); teamarray.forEach((team)=> {
-                if(team.players_id.includes(pidd)) { found=team; } });
-                console.log(found); var status_team=found.ref_players.find(o=>
+                teamarray.forEach((team)=> { if(team.players_id.includes(pidd))
+                { found=team; } }); var status_team=found.ref_players.find(o=>
                 o.play_id==pid); let ans="" ; if(!status_team) {
                 ans="Registered"; } else { ans=status_team.val; } %>
                 <p>Your Team:<%= found .team_name%></p>

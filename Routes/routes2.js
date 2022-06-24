@@ -302,4 +302,51 @@ router.post("/update_status", [auth, urlencoded], async (req, res) => {
     return res.render("error", { msg: [err] });
   }
 });
+router.post("/single_update_status", [auth, urlencoded], async (req, res) => {
+  /// return res.send(req.body);
+  const tid = req.body.tid;
+  const pid_array = req.body.pid;
+  const status_array = req.body.status;
+  var flag = 0;
+  for (var i = 0; i < pid_array.length; i++) {
+    try {
+      const user_obj = await User.findById(pid_array[i]);
+      if (user_obj) {
+        const index = user_obj.pstatus.findIndex((o) => o.tou_id.equals(tid));
+        if (index > -1) {
+          user_obj.pstatus[index].val = status_array[i];
+        }
+        const ans = await user_obj.save();
+        if (ans) {
+          flag++;
+        }
+      } else {
+        return res.render("error", { msg: ["Wrong user Id"] });
+      }
+    } catch (err) {
+      return res.render("error", { msg: [err] });
+    }
+  }
+  if (flag == pid_array.length) {
+    return res.redirect("/admin/explore");
+  }
+});
+router.post("/delete_tournament", [auth, urlencoded], async (req, res) => {
+  const tidd = req.body.tid;
+  console.log(req.body);
+  try {
+    console.log(tidd + "dsadsa");
+    const tour_obj = await Tournament.findById(tidd);
+
+    if (tour_obj) {
+      tour_obj.status_tournament = "Cancelled";
+      const final_res = await tour_obj.save();
+      if (final_res) {
+        return res.redirect("/admin/explore");
+      }
+    }
+  } catch (err) {
+    return res.render("error", { msg: [err] });
+  }
+});
 module.exports = router;

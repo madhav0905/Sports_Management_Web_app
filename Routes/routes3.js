@@ -20,8 +20,14 @@ const moment = require("moment");
 require("dotenv").config();
 
 router.get("/explore", [auth, urlencoded], async (req, res) => {
-  const tour_name = req.query.search;
+  let tour_name = req.query.search;
+
   const user_id = req.decoded;
+  if (tour_name == undefined) {
+    tour_name = "";
+  }
+  let start_date = req.query.start_date;
+  let end_date = req.query.end_date;
   try {
     const user_obj = await User.findById(user_id);
     if (user_obj) {
@@ -29,36 +35,60 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
 
       const target_date = new Date(moment().add(1, "days"));
 
-      if (tour_name) {
+      if (start_date != undefined && end_date != undefined) {
+        console.log("ea sports");
         await Tournament.find({
           status_tournament: "Active",
           _id: { $nin: user_tid },
           start_date: { $gte: target_date },
-          tname: new RegExp(tour_name, "i"),
+          $and: [
+            { start_date: { $gte: new Date(start_date) } },
+            { end_date: { $lte: new Date(end_date) } },
+          ],
+          tname: new RegExp("^" + tour_name, "i"),
         })
           .then((obj) => {
+            const teams_obj = obj.filter((o) => {
+              return o.sport_type == "team";
+            });
+            const single_obj = obj.filter((o) => o.sport_type === "single");
+
             res.render("user/explore", {
-              tournaments: obj,
+              teams_obj: teams_obj,
+              single_obj: single_obj,
               given_pattern: tour_name,
               moment: moment,
               active_tab: 1,
+              level: true,
+              start: start_date,
+              end: end_date,
             });
           })
           .catch((err) => res.render("error", { msg: [err] }));
       } else {
+        console.log("hisdasd");
         await Tournament.find({
           status_tournament: "Active",
           _id: { $nin: user_tid },
           start_date: { $gte: target_date },
         })
-          .then((obj) =>
+          .then((obj) => {
+            const teams_obj = obj.filter((o) => {
+              return o.sport_type == "team";
+            });
+            const single_obj = obj.filter((o) => o.sport_type === "single");
+
             res.render("user/explore", {
-              tournaments: obj,
-              given_pattern: "",
+              teams_obj: teams_obj,
+              single_obj: single_obj,
+              given_pattern: tour_name,
               moment: moment,
               active_tab: 1,
-            })
-          )
+              level: true,
+              start: "",
+              end: "",
+            });
+          })
           .catch((err) => res.render("error", { msg: [err] }));
       }
     } else {

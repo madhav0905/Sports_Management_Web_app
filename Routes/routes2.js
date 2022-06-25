@@ -21,11 +21,18 @@ require("dotenv").config();
 
 router.get("/explore", [auth, urlencoded], async (req, res) => {
   let given_pattern = req.query.search;
+  let start_date = req.query.start_date;
+  let end_date = req.query.end_date;
+  if (given_pattern === undefined) {
+    given_pattern = "";
+  }
 
-  if (given_pattern != undefined) {
+  if (start_date != undefined && end_date != undefined) {
     try {
       const re_obj = await Tournament.find({
         tname: new RegExp("^" + given_pattern, "i"),
+        start_date: { $gte: new Date(start_date) },
+        end_date: { $lte: new Date(end_date) },
         status_tournament: { $ne: "Cancelled" },
       });
 
@@ -38,8 +45,11 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
         teams_obj: teams_obj,
         single_obj: single_obj,
         moment: moment,
+        start: start_date,
+        end: end_date,
         given_pattern: given_pattern,
         active_tab: 1,
+        level: true,
       });
     } catch (err) {
       console.log(err);
@@ -60,7 +70,10 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
         single_obj: single_obj,
         moment: moment,
         given_pattern: "",
+        start: "",
+        end: "",
         active_tab: 1,
+        level: true,
       });
     } catch (err) {
       return res.render("error", { msg: ["Server Busy Please try again!"] });
@@ -383,6 +396,9 @@ router.get("/deleted", [auth, urlencoded], async (req, res) => {
         moment: moment,
         given_pattern: given_pattern,
         active_tab: 3,
+        start: "",
+        end: "",
+        level: false,
       });
     } catch (err) {
       console.log(err);
@@ -404,6 +420,9 @@ router.get("/deleted", [auth, urlencoded], async (req, res) => {
         moment: moment,
         given_pattern: "",
         active_tab: 3,
+        start: "",
+        end: "",
+        level: false,
       });
     } catch (err) {
       return res.render("error", { msg: ["Server Busy Please try again!"] });

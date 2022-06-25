@@ -1,51 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Explore</title>
+    <title>Cancelled Tournaments</title>
     <%- include("../partials/heading") %>
     <body>
       <%- include("../partials/admin_nav")%>
       <section class="section">
-        <div class="level">
-          <div class="level-left">
-            <div class="level-item">
-              <div class="select">
-                <select name="" id="">
-                  <option>sdsa</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="level-right">
-            <div class="level-item has-text-centered">
-              <div class="field">
-                <label for="date">Start Date</label>
-                <div class="control">
-                  <input
-                    class="input"
-                    type="date"
-                    placeholder="start_date"
-                    id="start"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="level-item has-text-centered">
-              <p class="heading">End Date</p>
-              <input type="date" id="end" placeholder="end_date" />
-            </div>
-            <div class="level-item">
-              <input
-                type="submit"
-                class="button is-success is-small is-rounded"
-                value="Search"
-                onclick="return form_send()"
-              />
-            </div>
-          </div>
-        </div>
-
-        <% var f=0;if(teams_obj.length){%>
+        <% if(level){%> <%- include("../partials/search_feature") %><%}%> <% var
+        f=0;if(teams_obj.length){%>
         <h1>Teams</h1>
         <div class="columns is-multiline">
           <% teams_obj.forEach(obj => { var x =
@@ -155,15 +117,18 @@
         }
       </style>
       <script>
-        console.log(document.getElementById("start").value);
-        if (document.getElementById("start").value == "") {
-          console.log("hi");
-        }
         function form_send() {
           console.log(window.location.href);
           const Url = new URL(window.location.href);
           const start_val = document.getElementById("start").value;
+          console.log(start_val + " sad");
           const end_val = document.getElementById("end").value;
+          if (new Date(start_val).getTime() > new Date(end_val).getTime()) {
+            console.log("hi");
+            document.getElementById("sm").innerText =
+              "End Date should be greater than start date";
+            return false;
+          }
           if (start_val != "" && end_val != "") {
             Url.searchParams.set("start_date", start_val);
             Url.searchParams.set("end_date", end_val);
@@ -174,7 +139,23 @@
             //  document.getElementById("theform").action = ans;
             window.location.href = ans;
             return true;
+          } else if (start_val == "" && end_val == "") {
+            console.log("dsasd");
+            console.log(Url.searchParams.get("start_date"));
+            if (
+              Url.searchParams.get("start_date") &&
+              Url.searchParams.get("end_date")
+            ) {
+              Url.searchParams.delete("start_date");
+              Url.searchParams.delete("end_date");
+            }
+            const ans = Url.pathname + Url.search;
+
+            window.location.href = ans;
+            return true;
           } else {
+            document.getElementById("sm").innerText =
+              "Both dates are to be filled;";
             return false;
           }
           //console.log(document.getElementById("theform").action);

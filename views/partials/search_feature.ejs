@@ -1,0 +1,49 @@
+<div class="level">
+  <div class="level-left">
+    <div class="level-item">
+      <div class="select">
+        <select name="" id="">
+          <option>sdsa</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="level-right">
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">Start Date</p>
+
+        <input
+          class="input"
+          type="date"
+          placeholder="start_date"
+          id="start"
+          value="<%=start%>"
+        />
+        <small></small>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">End Date</p>
+
+        <input
+          class="input"
+          type="date"
+          placeholder="start_date"
+          id="end"
+          value="<%=end%>"
+        />
+        <small id="sm" class="has-text-danger"></small>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div class="container has-text-centered">
+        <p class="heading" style="visibility: hidden">s</p>
+        <button class="button is-success" onclick="return form_send()">
+          Search
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

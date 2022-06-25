@@ -6,10 +6,52 @@
     <body>
       <%- include("../partials/admin_nav")%>
       <section class="section">
+        <div class="level">
+          <div class="level-left">
+            <div class="level-item">
+              <div class="select">
+                <select name="" id="">
+                  <option>sdsa</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="level-right">
+            <div class="level-item has-text-centered">
+              <div class="field">
+                <label for="date">Start Date</label>
+                <div class="control">
+                  <input
+                    class="input"
+                    type="date"
+                    placeholder="start_date"
+                    id="start"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="level-item has-text-centered">
+              <p class="heading">End Date</p>
+              <input type="date" id="end" placeholder="end_date" />
+            </div>
+            <div class="level-item">
+              <input
+                type="submit"
+                class="button is-success is-small is-rounded"
+                value="Search"
+                onclick="return form_send()"
+              />
+            </div>
+          </div>
+        </div>
+
+        <% var f=0;if(teams_obj.length){%>
+        <h1>Teams</h1>
         <div class="columns is-multiline">
-          <% if(tournaments.length){%> <% tournaments.forEach(obj => { var x =
+          <% teams_obj.forEach(obj => { var x =
           moment(obj.start_date).format("YYYY-MM-DD"); var y =
           moment(obj.end_date).format("YYYY-MM-DD");%>
+
           <div class="column is-one-third">
             <div class="card">
               <div class="card-header">
@@ -17,19 +59,13 @@
               </div>
               <div class="card-content">
                 <p class="card-header-subtitle"><%= obj.sport%></p>
-                <% if(obj.sport_type==="team") {%>
-                <p>Team</p>
+
                 <p>Number Of Teams : <%=obj.numofteams%></p>
                 <p>Players Per Team: <%=obj.playerspteam%></p>
                 <p>Teams Registered:<%=obj.curr_num_teams%></p>
-                <% }else {%>
-                <p>Single</p>
 
-                <p>Players : <%=obj.number_single_player%></p>
-                <p>Players Registered:<%=obj.curr_num_teams%></p>
                 <p></p>
-                <p></p>
-                <% } %>
+
                 <p>Tournament Status: <%=obj.status_tournament%></p>
                 <p>start_date :<%= x %></p>
                 <p>end_date :<%= y %></p>
@@ -49,11 +85,52 @@
               </footer>
             </div>
           </div>
-          <% })%> <% }else { %>
+          <% })%>
+        </div>
+        <% }else { f=1; %> <%}%> <% if(single_obj.length){%>
+        <h1>Single</h1>
+        <div class="columns is-multiline">
+          <% single_obj.forEach(obj => { var x =
+          moment(obj.start_date).format("YYYY-MM-DD"); var y =
+          moment(obj.end_date).format("YYYY-MM-DD");%>
+
+          <div class="column is-one-third">
+            <div class="card">
+              <div class="card-header">
+                <p class="card-header-title is-centered"><%= obj.tname%></p>
+              </div>
+              <div class="card-content">
+                <p class="card-header-subtitle"><%= obj.sport%></p>
+
+                <p>Players : <%=obj.number_single_player%></p>
+                <p>Players Registered:<%=obj.curr_num_teams%></p>
+                <p></p>
+                <p></p>
+
+                <p>Tournament Status: <%=obj.status_tournament%></p>
+                <p>start_date :<%= x %></p>
+                <p>end_date :<%= y %></p>
+              </div>
+              <footer class="card-footer">
+                <% if(obj.status_tournament!="Cancelled") {%>
+                <a
+                  href="/admin/tournaments/<%= obj._id%>"
+                  class="card-footer-item"
+                  >Check Info</a
+                >
+                <a
+                  href="/admin/edit_tournament/<%= obj._id%>"
+                  class="card-footer-item"
+                  >Modify</a
+                ><%}%>
+              </footer>
+            </div>
+          </div>
+          <% })%> <% }else { if(f==1){ %>
           <div class="container">
             <h1 class="has-text-centered">NO Tournaments</h1>
           </div>
-          <%}%>
+          <%}}%>
         </div>
       </section>
       <style>
@@ -77,7 +154,32 @@
           padding: 40px;
         }
       </style>
-      <script></script>
+      <script>
+        console.log(document.getElementById("start").value);
+        if (document.getElementById("start").value == "") {
+          console.log("hi");
+        }
+        function form_send() {
+          console.log(window.location.href);
+          const Url = new URL(window.location.href);
+          const start_val = document.getElementById("start").value;
+          const end_val = document.getElementById("end").value;
+          if (start_val != "" && end_val != "") {
+            Url.searchParams.set("start_date", start_val);
+            Url.searchParams.set("end_date", end_val);
+            console.log(Url);
+            const ans = Url.pathname + Url.search;
+            console.log(Url.search);
+            console.log(ans);
+            //  document.getElementById("theform").action = ans;
+            window.location.href = ans;
+            return true;
+          } else {
+            return false;
+          }
+          //console.log(document.getElementById("theform").action);
+        }
+      </script>
     </body>
   </head>
 </html>

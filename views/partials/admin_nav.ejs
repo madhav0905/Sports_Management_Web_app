@@ -13,13 +13,15 @@
   
     <div id="navbarExampleTransparentExample" class="navbar-menu">
       <div class="navbar-start">
-        <a class="navbar-item is-italic  is-active is-tab " id="y" href="/admin/explore">
+        <a class="navbar-item is-italic  is-active is-tab " href="/admin/explore">
          Tournaments
         </a>
-        <a class="navbar-item is-italic "id="x" href="/admin/create">
+        <a class="navbar-item is-italic " href="/admin/create">
         Create Tournament
           </a>
-        
+          <a class="navbar-item is-italic " href="/admin/deleted">
+        Deleted Tournaments
+          </a>
         
       </div>
   </div>
@@ -30,7 +32,7 @@
           <p class="control">
        
                 <div class="control has-icons-left">
-                  <form action="#" method="get">
+                  
                 <% if(given_pattern==="") {%>
                 <input type="search" name="search" class="input" id="a" placeholder="Search By Tournament Name">
                 <%} else {%>
@@ -40,10 +42,10 @@
                 </div>
                 <div class="control">
                   
-                  <button class="button is-info is-italic">
+                  <button onclick="searchtour()"class="button is-info is-italic">
                     Search
                   </button>
-                </form>
+               
                 </div>
             
             </p>
@@ -117,6 +119,27 @@ x[i].classList.remove("is-active");
 
 x[parseInt(active_tab)-1].classList.add("is-tab");
 x[parseInt(active_tab)-1].classList.add("is-active");
+
+function searchtour()
+{
+  console.log(window.location.href);
+          const Url = new URL(window.location.href);
+          const tour_val = document.getElementById("a").value;
+     
+          Url.searchParams.set("search", tour_val);
+     
+          console.log(Url);
+          const ans = Url.pathname + Url.search;
+          console.log(Url.search);
+          console.log(ans);
+          //  document.getElementById("theform").action = ans;
+          window.location.href = ans;
+}
+
+
+
+
+
 </script>
 <style>
   

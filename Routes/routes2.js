@@ -21,14 +21,22 @@ require("dotenv").config();
 
 router.get("/explore", [auth, urlencoded], async (req, res) => {
   let given_pattern = req.query.search;
-  if (given_pattern != "") {
+
+  if (given_pattern != undefined) {
     try {
       const re_obj = await Tournament.find({
-        tname: new RegExp(given_pattern, "i"),
+        tname: new RegExp("^" + given_pattern, "i"),
+        status_tournament: { $ne: "Cancelled" },
       });
 
+      const teams_obj = re_obj.filter((o) => {
+        return o.sport_type == "team";
+      });
+      const single_obj = re_obj.filter((o) => o.sport_type === "single");
+
       return res.render("admins/explore", {
-        tournaments: re_obj,
+        teams_obj: teams_obj,
+        single_obj: single_obj,
         moment: moment,
         given_pattern: given_pattern,
         active_tab: 1,
@@ -39,10 +47,17 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
     }
   } else {
     try {
-      const obj = await Tournament.find({});
+      const obj = await Tournament.find({
+        status_tournament: { $ne: "Cancelled" },
+      });
 
+      const teams_obj = obj.filter((o) => {
+        return o.sport_type == "team";
+      });
+      const single_obj = obj.filter((o) => o.sport_type === "single");
       return res.render("admins/explore", {
-        tournaments: obj,
+        teams_obj: teams_obj,
+        single_obj: single_obj,
         moment: moment,
         given_pattern: "",
         active_tab: 1,
@@ -246,7 +261,6 @@ router.post("/store/edit_tournament", [auth, urlencoded], async (req, res) => {
       tour_obj.status_tournament = req.body.status;
       const final = await tour_obj.save();
       if (final) {
-        console.log(final);
         return res.redirect("/admin/explore");
       } else {
         return res.render("error", { msg: ["Server Busy Please Try again"] });
@@ -333,9 +347,8 @@ router.post("/single_update_status", [auth, urlencoded], async (req, res) => {
 });
 router.post("/delete_tournament", [auth, urlencoded], async (req, res) => {
   const tidd = req.body.tid;
-  console.log(req.body);
+
   try {
-    console.log(tidd + "dsadsa");
     const tour_obj = await Tournament.findById(tidd);
 
     if (tour_obj) {
@@ -347,6 +360,54 @@ router.post("/delete_tournament", [auth, urlencoded], async (req, res) => {
     }
   } catch (err) {
     return res.render("error", { msg: [err] });
+  }
+});
+router.get("/deleted", [auth, urlencoded], async (req, res) => {
+  let given_pattern = req.query.search;
+
+  if (given_pattern != undefined) {
+    try {
+      const re_obj = await Tournament.find({
+        tname: new RegExp("^" + given_pattern, "i"),
+        status_tournament: { $eq: "Cancelled" },
+      });
+
+      const teams_obj = re_obj.filter((o) => {
+        return o.sport_type == "team";
+      });
+      const single_obj = re_obj.filter((o) => o.sport_type === "single");
+
+      return res.render("admins/explore", {
+        teams_obj: teams_obj,
+        single_obj: single_obj,
+        moment: moment,
+        given_pattern: given_pattern,
+        active_tab: 3,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.render("error", { msg: ["Server Busy Please try again!"] });
+    }
+  } else {
+    try {
+      const obj = await Tournament.find({
+        status_tournament: { $eq: "Cancelled" },
+      });
+
+      const teams_obj = obj.filter((o) => {
+        return o.sport_type == "team";
+      });
+      const single_obj = obj.filter((o) => o.sport_type === "single");
+      return res.render("admins/explore", {
+        teams_obj: teams_obj,
+        single_obj: single_obj,
+        moment: moment,
+        given_pattern: "",
+        active_tab: 3,
+      });
+    } catch (err) {
+      return res.render("error", { msg: ["Server Busy Please try again!"] });
+    }
   }
 });
 module.exports = router;

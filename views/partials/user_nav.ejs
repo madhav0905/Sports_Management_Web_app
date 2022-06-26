@@ -5,12 +5,16 @@
       </a>
       <div class="level is-mobile" id="l1" >
       <div class="navbar-burger" data-target="searchhelp" id="Searchone">
-        <i class="fa  fa-search p-2"></i>
+        <i class="fa  fa-search p-2" id="searchicon"></i>
 </div>
       <div class="navbar-burger" data-target="navbarExampleTransparentExample" id="burgerone">
         <span></span>
         <span></span>
         <span></span>
+      </div>
+      <div class="navbar-burger" data-target="logout" id="logoutt">
+          <i class="fa  fa-sign-out p-2"></i>
+
       </div>
     </div>
   </div>
@@ -33,10 +37,10 @@
   <div class="navbar-menu" id="searchhelp">
     <div class="navbar-end">
  <div class="navbar-item" id="searchandinput">
-            
+            <div class="level is-mobile">
           <p class="control">
        
-                <div class="control has-icons-left">
+                <div class="control has-icons-left level-item">
  
                 <% if(given_pattern==="") {%>
                 <input type="search" name="search" class="input" id="a" placeholder="Search by Tournament Name">
@@ -44,8 +48,7 @@
                <input type="search" name="search" class="input" id="a" value="<%= given_pattern %>"  placeholder="Search by Tournament Name">
                <% }%> 
                 <span class="icon is-left"><i class="fa fa-search"></i></span>
-                </div>
-                <div class="control">
+                
                   
                   <button onclick="searchtour()" class="button is-info is-italic">
                     Search
@@ -55,20 +58,20 @@
             
             </p>
             </div>
+            </div>
     </div>
   </div>
+  <div class="navbar-menu " id="logout">
       <div class="navbar-end">
 
        
-            <div class="navbar-item">
-              
-            <p class="control">
+            <div class="navbar-item ">
+        <div class="container has-text-centered">
         <a   href="/logged/logout" class=" button is-danger is-italic">Log out</a>
-           
-            </p>
+</div>
             </div>
           </div>
-      
+      </div>
  
   </nav>
   <div class="container is-widescreen">
@@ -106,6 +109,22 @@ a .nav-item .is-active
   justify-content: flex-end;
    width: 0rem;
 }
+.navbar-end
+{
+  margin: 0%;
+}
+
+#logout
+{
+
+  margin-left: 1%;
+
+}
+#searchhelp
+{
+  margin-left: 23%;
+
+}
 }
 
 #Searchone
@@ -119,6 +138,11 @@ margin-right: 1%;
   margin-left: 3%;;
 margin-right: 0%;
 }
+#logoutt
+{padding-top:0.8rem;
+
+}
+
 
 
 </style>

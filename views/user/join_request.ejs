@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Explore</title>
+    <title>Request for Join</title>
     <%- include("../partials/heading") %>
     <body>
       <%- include("../partials/user_nav")%> <%var g=1; if(team_obj.length){%> <%
@@ -74,12 +74,12 @@
           <% } else{} }) %>
         </div>
         <% }else{ }%> <% })%> <% }else { g=0; %>
-        <div class="container">
+        <div class="section">
           <h1 class="has-text-centered">NO requests</h1>
         </div>
         <%} if(cnt==actual_cnt && g) {%>
 
-        <div class="container">
+        <div class="section">
           <h1 class="has-text-centered">NO requests</h1>
         </div>
 
@@ -90,7 +90,7 @@
             height: min-content;
           }
           #searchandinput {
-            display: none;
+            visibility: hidden;
           }
           .card:hover {
             transform: translate3D(0, -1px, 0) scale(1.03);
@@ -112,17 +112,25 @@
 
             padding: 40px;
           }
-          .container {
-            animation: 1s ease-out 0s 1 slideInLeft;
 
-            padding: 40px;
-          }
           .btn-link {
             background: none;
             border: none;
 
             color: #3097d1;
             font: inherit;
+          }
+          #Searchone {
+            display: "none";
+          }
+          #searchhelp {
+            display: "none";
+          }
+          #searchicon {
+            visibility: hidden;
+          }
+          #Searchone {
+            visibility: hidden;
           }
         </style>
         <script>

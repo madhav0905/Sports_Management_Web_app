@@ -40,7 +40,7 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
         return o.sport_type == "team";
       });
       const single_obj = re_obj.filter((o) => o.sport_type === "single");
-
+      console.log(given_pattern);
       return res.render("admins/explore", {
         teams_obj: teams_obj,
         single_obj: single_obj,
@@ -56,9 +56,11 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
       return res.render("error", { msg: ["Server Busy Please try again!"] });
     }
   } else {
+    console.log(given_pattern);
     try {
       const obj = await Tournament.find({
         status_tournament: { $ne: "Cancelled" },
+        tname: new RegExp("^" + given_pattern, "i"),
       });
 
       const teams_obj = obj.filter((o) => {
@@ -69,7 +71,7 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
         teams_obj: teams_obj,
         single_obj: single_obj,
         moment: moment,
-        given_pattern: "",
+        given_pattern: given_pattern,
         start: "",
         end: "",
         active_tab: 1,

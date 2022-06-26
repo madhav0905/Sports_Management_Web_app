@@ -36,7 +36,6 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
       const target_date = new Date(moment().add(1, "days"));
 
       if (start_date != undefined && end_date != undefined) {
-        console.log("ea sports");
         await Tournament.find({
           status_tournament: "Active",
           _id: { $nin: user_tid },

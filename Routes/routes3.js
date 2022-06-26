@@ -265,27 +265,78 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
 router.get("/show", [auth, urlencoded], async (req, res) => {
   const pid = req.decoded;
   let given_pattern = req.query.search;
+  let start_date = req.query.start_date;
+  let end_date = req.query.end_date;
 
   if (!given_pattern) {
     given_pattern = "";
   }
-
+  console.log(given_pattern);
   try {
-    const user_obj = await User.findById(pid).populate({
-      path: "tournament_id",
-      match: { tname: new RegExp(given_pattern, "i") },
+    if (start_date != undefined && end_date != undefined) {
+      console.log();
+      const user_obj = await User.findById(pid).populate({
+        path: "tournament_id",
+        match: {
+          tname: new RegExp("^" + given_pattern, "i"),
+          start_date: { $gte: new Date(start_date) },
+          end_date: { $lte: new Date(end_date) },
+        },
 
-      populate: { path: "team_id" },
-    });
-    if (user_obj) {
-      ///  return res.send(user_obj.tournament_id);
-      return res.render("user/show", {
-        active_tab: 2,
-        tournament: user_obj,
-        given_pattern: given_pattern,
-        moment: moment,
-        pid: pid,
+        populate: { path: "team_id" },
       });
+
+      if (user_obj) {
+        const teams_obj = user_obj.tournament_id.filter(
+          (o) => o.sport_type == "team"
+        );
+        const single_obj = user_obj.tournament_id.filter(
+          (o) => o.sport_type == "single"
+        );
+
+        ///  return res.send(user_obj.tournament_id);
+        return res.render("user/show", {
+          active_tab: 2,
+
+          single_obj: single_obj,
+          teams_obj: teams_obj,
+          given_pattern: given_pattern,
+          moment: moment,
+          pid: pid,
+          level: true,
+          start: start_date,
+          end: end_date,
+        });
+      }
+    } else {
+      console.log("dsa");
+      const user_obj = await User.findById(pid).populate({
+        path: "tournament_id",
+        match: { tname: new RegExp("^" + given_pattern, "i") },
+        populate: { path: "team_id" },
+      });
+      if (user_obj) {
+        const teams_obj = user_obj.tournament_id.filter(
+          (o) => o.sport_type == "team"
+        );
+        const single_obj = user_obj.tournament_id.filter(
+          (o) => o.sport_type == "single"
+        );
+
+        ///  return res.send(user_obj.tournament_id);
+        return res.render("user/show", {
+          active_tab: 2,
+
+          single_obj: single_obj,
+          teams_obj: teams_obj,
+          given_pattern: given_pattern,
+          moment: moment,
+          pid: pid,
+          level: true,
+          start: "",
+          end: "",
+        });
+      }
     }
   } catch (err) {
     return res.render("error", { msg: [err] });

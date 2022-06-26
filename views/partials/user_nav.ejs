@@ -3,14 +3,17 @@
       <a class="navbar-item mt-0 mb-0" href="#">
        <p class="subtitle has-text-warning">ABC LIMITED</p>
       </a>
-      
-      <div class="navbar-burger" data-target="navbarExampleTransparentExample">
+      <div class="level is-mobile" id="l1" >
+      <div class="navbar-burger" data-target="searchhelp" id="Searchone">
+        <i class="fa  fa-search p-2"></i>
+</div>
+      <div class="navbar-burger" data-target="navbarExampleTransparentExample" id="burgerone">
         <span></span>
         <span></span>
         <span></span>
       </div>
     </div>
-  
+  </div>
     <div id="navbarExampleTransparentExample" class="navbar-menu">
       <div class="navbar-start">
         <a class="navbar-item is-italic  is-active is-tab "  href="/user/explore">
@@ -19,6 +22,7 @@
         <a class="navbar-item is-italic " href="/user/show">
         Your Tournaments
           </a>
+
            <a class="navbar-item is-italic " href="/user/join_request">
         Request for join in Team
           </a>
@@ -26,9 +30,9 @@
         
       </div>
   </div>
-      <div class="navbar-end">
-
-        <div class="navbar-item" id="searchandinput">
+  <div class="navbar-menu" id="searchhelp">
+    <div class="navbar-end">
+ <div class="navbar-item" id="searchandinput">
             
           <p class="control">
        
@@ -51,6 +55,11 @@
             
             </p>
             </div>
+    </div>
+  </div>
+      <div class="navbar-end">
+
+       
             <div class="navbar-item">
               
             <p class="control">
@@ -59,8 +68,7 @@
             </p>
             </div>
           </div>
-        </div>
-      </div>
+      
  
   </nav>
   <div class="container is-widescreen">
@@ -71,7 +79,46 @@ a .nav-item .is-active
 {
     background-color: aqua;
 }
+.navbar-brand
+{
+  display: flex;
+}
+.navbar-burger
+{
 
+  width: 1rem;
+  margin: 1rem;
+
+}
+@media only screen and (max-width: 1000px) {
+ #l1
+ {
+
+  display: flex;
+  justify-content: flex-end;
+   width: 50rem;
+ }
+}
+@media only screen and (min-width: 1000px) {
+ #l1
+{
+  display: none;
+  justify-content: flex-end;
+   width: 0rem;
+}
+}
+
+#Searchone
+{
+margin-left:50%;
+padding-top:0.8rem;
+margin-right: 1%;
+} 
+#burger1
+{
+  margin-left: 3%;;
+margin-right: 0%;
+}
 
 
 </style>

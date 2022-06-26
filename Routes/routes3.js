@@ -66,7 +66,6 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
           })
           .catch((err) => res.render("error", { msg: [err] }));
       } else {
-        console.log("hisdasd");
         await Tournament.find({
           status_tournament: "Active",
           _id: { $nin: user_tid },

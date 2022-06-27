@@ -423,4 +423,38 @@ router.post("/acceptrequest", [auth, urlencoded], async (req, res) => {
     return res.render("error", { msg: [err] });
   }
 });
+router.get("/user_profile", [auth, urlencoded], async (req, res) => {
+  const pid = req.decoded;
+  try {
+    const user_obj = await User.findById(pid);
+    if (user_obj) {
+      return res.render("user/user_profile", {
+        given_pattern: "",
+        active_tab: 4,
+        user_obj: user_obj,
+        msg: [],
+      });
+    } else {
+      return res.render("error", { msg: ["Wrong user Id"] });
+    }
+  } catch (er) {
+    return res.render("error", { msg: ["Server Busy Try again!"] });
+  }
+});
+router.post("/edituserprofile", [auth, urlencoded], async (req, res) => {
+  const userid = req.decoded;
+  try {
+    const user_obj = await User.findById(userid);
+    user_obj.name = req.body.name;
+    user_obj.address = req.body.address;
+    user_obj.age = req.body.age;
+    user_obj.bloodgroup = req.body.bloodgroup;
+    const final = user_obj.save();
+    if (final) {
+      return res.redirect("/user/user_profile");
+    }
+  } catch (err) {
+    return res.render("error", { msg: [err] });
+  }
+});
 module.exports = router;

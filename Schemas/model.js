@@ -63,6 +63,8 @@ const userschema = new mongoose.Schema({
       val: { type: String },
     },
   ],
+  bloodgroup: String,
+
   role: {
     type: String,
     default: "user",

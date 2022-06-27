@@ -8,20 +8,17 @@
     setTimeout(removeLoader, 1000); //wait for page load PLUS two seconds.
   });
   function removeLoader() {
-     $("section").show()
+    
     $("#loadingDiv").fadeOut(500, function () {
       // fadeOut complete. Remove the loading div
-      $("#loadingDiv").remove(); //makes page more lightweight
+      $("#loadingDiv").remove(); 
+       $("section").show()//makes page more lightweight
     });
   }
   
 
 
-  $(window).load(function() {
-
-    $('#loading').hide();
-
-  });
+  
 
 </script>
 

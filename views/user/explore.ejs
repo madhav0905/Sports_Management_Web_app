@@ -137,7 +137,7 @@
           let tea = "<%= is_team%>";
           sin = parseInt(sin);
           tea = parseInt(tea);
-          console.log(typeof sin + " " + tea);
+
           if (ans === "all") {
             if (tea) {
               document.getElementById("teams").style.display = "block";
@@ -147,10 +147,10 @@
             }
           } else if (ans === "team") {
             if (tea) {
-              console.log("asd");
+            
               document.getElementById("teams").style.display = "block";
               if (sin) {
-                console.log("dsa");
+            
                 document.getElementById("single").style.display = "none";
               }
             }
@@ -164,13 +164,13 @@
           }
         }
         function form_send() {
-          console.log(window.location.href);
+     
           const Url = new URL(window.location.href);
           const start_val = document.getElementById("start").value;
-          console.log(start_val + " sad");
+          
           const end_val = document.getElementById("end").value;
           if (new Date(start_val).getTime() > new Date(end_val).getTime()) {
-            console.log("hi");
+       
             document.getElementById("sm").innerText =
               "End Date should be greater than start date";
             return false;
@@ -178,16 +178,15 @@
           if (start_val != "" && end_val != "") {
             Url.searchParams.set("start_date", start_val);
             Url.searchParams.set("end_date", end_val);
-            console.log(Url);
+     
             const ans = Url.pathname + Url.search;
-            console.log(Url.search);
-            console.log(ans);
+          
             //  document.getElementById("theform").action = ans;
             window.location.href = ans;
             return true;
           } else if (start_val == "" && end_val == "") {
-            console.log("dsasd");
-            console.log(Url.searchParams.get("start_date"));
+          
+   
             if (
               Url.searchParams.get("start_date") &&
               Url.searchParams.get("end_date")
@@ -204,7 +203,7 @@
               "Both dates are to be filled;";
             return false;
           }
-          //console.log(document.getElementById("theform").action);
+       
         }
       </script>
       <%- include("../partials/footer") %>

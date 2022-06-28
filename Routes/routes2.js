@@ -320,7 +320,7 @@ router.post("/update_status", [auth, urlencoded], async (req, res) => {
 
       const main_result = await team_obj.save();
       if (main_result) {
-        return res.send(main_result);
+        return res.redirect("/admin/tournaments/" + tour_id);
       } else {
         return res.render("error", { msg: ["Server Busy Try again later"] });
       }

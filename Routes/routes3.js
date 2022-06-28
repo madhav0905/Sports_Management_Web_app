@@ -68,6 +68,7 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
         await Tournament.find({
           status_tournament: "Active",
           _id: { $nin: user_tid },
+          tname: new RegExp("^" + tour_name, "i"),
           start_date: { $gte: target_date },
         })
           .then((obj) => {

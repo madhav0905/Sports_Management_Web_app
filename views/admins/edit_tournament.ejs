@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Create Tournament</title>
+    <title>Edit Tournament</title>
     <%- include("../partials/heading") %>
     <body>
       <%- include("../partials/admin_nav")%>
@@ -10,12 +10,17 @@
         <div class="columns is-mobile">
   <div class="column is-three-fifths is-offset-one-fifth m-2">
     <div class="box m-4">
-
-<form id="myform" action="/admin/store" method="post" onSubmit="return validate()">
+        <%var z =
+          moment(tournament.start_date).format("YYYY-MM-DD"); var y =
+          moment(tournament.end_date).format("YYYY-MM-DD");%>
+<h1 class="title has-text-centered">Edit Tournament</h1>
+<form id="myform" action="/admin/store/edit_tournament" method="post" onSubmit="return validate()">
+    <input type="hidden" name="tour_id" value="<%= tournament._id%>">
+    <input type="hidden" name="sport_type" id="sport_type" value="<%=tournament.sport_type%>">
 <div class="field">
    <label class="label">Name Of Tournament<span id="star">*</span></label>
   <div class="control has-icons-left has-icons-right">
-    <input class="input " type="text" placeholder="Tournament name" name="tname" minlength="7">
+    <input class="input " type="text" placeholder="Tournament name" name="tname" required value="<%= tournament.tname %> ">
     <span class="icon is-small is-left">
       <i class="fa fa-info"></i>
     </span>
@@ -23,45 +28,39 @@
     </div>
     </div>
 <div class="field">
-   <label class="label">Sport Of Tournament<span id="star">*</span></label>
-  <div class="control has-icons-left has-icons-right">
-    <input class="input " type="text" placeholder="Tournament name" name="sport" required>
-    <span class="icon is-small is-left">
-      <i class="fa fa-futbol-o"></i>
-    </span>
-     <small></small>
-    </div>
+   <label class="label">Sport Of Tournament  <span id="star">  -</span><%= tournament.sport%></label>
+
     </div>
     <div class="field">
-   <label class="label">Sport Type<span id="star">*</span></label>
-   <div class="control has-icons-left"></p>
-                    <div class="select">
-                      <select class="is-hovered" name="sport_type" id="sport_type" onChange="toggle_in_out()">
-                        <option value="single" selected>Single</option>
-                        <option value="team">Team</option>
+   <label class="label">Sport Type<span id="star"> -  </span>
 
-                      </select>
-                  
-                  </div>
-                    <span class="icon is-small is-left">
-                        <i class="fa fa-group"></i>
-                      </span>
-                    </div>
+<% var x=tournament.sport_type; if(x=='single'){ %> 
+Single
+<%}else { %>
+ Team
+    <%}%>
+
+</label>
+
     </div>
-    <div class="field" id="for_single" >
+   
+<% var x=tournament.sport_type;  if(x==='single'){ %>
+ <div class="field" id="for_single" >
    <label class="label">Number of Players for Single Tournament<span id="star">*</span></label>
   <div class="control has-icons-left has-icons-right">
-    <input class="input " type="number" placeholder="Max Number of Participants" min=1 name="number_single_player">
+    <input class="input " type="number" placeholder="Max Number of Participants" min="<%=tournament.number_single_player%>" name="number_single_player" value="<%=tournament.number_single_player%>" >
     <span class="icon is-small is-left">
       <i class="fa fa-info"></i>
     </span>
      <small></small>
     </div>
     </div>
-    <div class="field" id="for_team">
+
+<% } else{ %>
+<div class="field" id="for_team">
    <label class="label">Number of Teams<span id="star">*</span></label>
   <div class="control has-icons-left has-icons-right">
-    <input class="input " type="number" placeholder="Number of Teams " name="numofteams" min=1 >
+    <input class="input " type="number" placeholder="Number of Teams " name="numofteams" min=<%=tournament.numofteams%> value="<%=tournament.numofteams%>" >
     <span class="icon is-small is-left">
       <i class="fa fa-info"></i>
     </span>
@@ -71,18 +70,47 @@
  <div class="field" id="for_team_players">
    <label class="label">Number of Players Per Team<span id="star">*</span></label>
   <div class="control has-icons-left has-icons-right">
-    <input class="input " type="number" placeholder="Number of Players per Team" name="playerspteam" min=2 >
+    <input class="input " type="number" placeholder="Number of Players per Team" name="playerspteam" min=<%=tournament.playerspteam%> value="<%=tournament.playerspteam%>">
     <span class="icon is-small is-left">
       <i class="fa fa-info"></i>
     </span>
      <small></small>
     </div>
     </div>
+<%}%>
+
+<div class="field">
+  <label  class="label">Status of Tournament:<span id="star">*</span></label>
+<div class="select">
+  <select name="status" >
+
+
+             <%   
+             var status_array=['Active','Closed'];
+                  var status_val=tournament.status_tournament;
+                for ( var i = 0; i < status_array.length; i++ )
+{
+    var selected = ( status_val == status_array[i] ) ? "selected" : "";
+    %><option value="<%=status_array[ i ] %>" <%=selected %>><%=status_array[i] %></option><%
+}
+
+%>
+
+
+  </select>
+</div>
+
+
+
+
+</div>
+   
+    
  <div class="field" >
    <label class="label">Start Date<span id="star">*</span></label>
   <div class="control has-icons-left has-icons-right">
     <% var min_date=moment().format('YYYY-MM-DD')%>
-    <input class="input " type="date" min=<%=min_date%> placeholder="Start Date of Tournament" name="start_date" required>
+    <input class="input " type="date" min=<%=min_date%> placeholder="Start Date of Tournament" name="start_date" value="<%= z %>" required>
     <span class="icon is-small is-left">
       <i class="fa fa-info"></i>
     </span>
@@ -92,7 +120,7 @@
  <div class="field" >
    <label class="label">End Date<span id="star">*</span></label>
   <div class="control has-icons-left has-icons-right">
-    <input class="input " type="date"min=<%=min_date%> placeholder="End Date of Tournament" name="end_date" required>
+    <input class="input " type="date" min=<%=min_date%> placeholder="End Date of Tournament" name="end_date" value="<%=y%>" required>
     <span class="icon is-small is-left">
       <i class="fa fa-info"></i>
     </span>
@@ -125,22 +153,15 @@
 </section>
     </body>
   </head>
-     <%- include("../partials/footer") %>
-  <script src="/js/tournament_val.js"></script>
+<script src="/js/edit_validate.js"></script>
+   <%- include("../partials/footer") %>
   <style>
-    #for_team
-    {
-        display: none;
-    }
-    #for_team_players
-    {
-        display: none;
-    }
+   
     #star
     {
         color: red;
     }
-    #searchandinput
+     #searchandinput
     {
       visibility: hidden;
     }

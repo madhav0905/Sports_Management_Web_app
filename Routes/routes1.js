@@ -28,7 +28,7 @@ router.get("/register", (req, res) => {
 
 router.post("/store", [urlencoded], async (req, res) => {
   //validate
-  console.log("reached post");
+
   const schema = Joi.object({
     user_name: Joi.string().min(5).required().email(),
     password: Joi.string().min(5).required(),
@@ -60,16 +60,14 @@ router.post("/store", [urlencoded], async (req, res) => {
     const obj = new User(req.body);
     await obj
       .save()
-      .then(() => {
-        console.log("done");
-      })
+      .then(() => {})
       .catch((err) => {
         console.log(err);
       });
   } catch (err) {
     return res.render("error", { msg: ["Server busy Please try again"] });
   }
-  console.log("success to db");
+
   return res.redirect("/auth/login");
 });
 router.post("/loggedin", [urlencoded], async (req, res) => {
@@ -78,11 +76,9 @@ router.post("/loggedin", [urlencoded], async (req, res) => {
     password: Joi.string().min(5).required(),
   });
   const ms = _.pick(req.body, ["user_name", "password"]);
-  console.log(ms);
+
   const check = validate_joi(schema, req.body);
   if (check.error) {
-    console.log(check.error);
-    console.log(check.error.details[0].message);
     return res.render("error", { msg: [check.error.details[0].message] });
   }
 

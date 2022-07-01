@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Request for Join</title>
+    <%- include("../partials/heading") %>
+    <body>
+      <%- include("../partials/user_nav")%> <%var g=1; if(team_obj.length){%> <%
+      var actual_cnt=team_obj.length;var cnt=0; team_obj.forEach(obj => { var x
+      = moment(obj.start_date).format("YYYY-MM-DD"); var y =
+      moment(obj.end_date).format("YYYY-MM-DD");%> <% var flag; const
+      temp_arr=obj.ref_players.filter(o=> o.val=="pending"); if(temp_arr.length)
+      { flag=1; } else { flag=0;cnt++; } if(flag){ %>
+      <section class="section m-0 has-text-centered">
+        <h1><%= obj.tournament_id.tname%> <%= obj.team_name%></h1>
+        <br />
+
+        <div class="columns is-multiline">
+          <% obj.ref_players.forEach(refplayer => {;
+          if(refplayer.val=="pending") {%>
+          <div class="column is-one-third">
+            <div class="card">
+              <div class="card-header">
+                <p class="card-header-title is-centered">
+                  <%=refplayer.play_id.name%>
+                </p>
+              </div>
+              <div class="card-content">
+                <p class="card-header-subtitle">
+                  <%= obj.tournament_id.sport%>
+                </p>
+                <p>Team</p>
+                <p>start_date :<%= x %></p>
+                <p>end_date :<%= y %></p>
+              </div>
+
+              <form
+                action="/user/acceptrequest"
+                method="post"
+                class="card-footer"
+              >
+                <input type="hidden" name="team_id" value="<%= obj._id%>" />
+                <input
+                  type="hidden"
+                  name="tid"
+                  value="<%=obj.tournament_id._id%>"
+                />
+                <input type="hidden" name="created_pid" value="<%=pid%>" />
+                <input
+                  type="hidden"
+                  name="user_pid"
+                  value="<%= refplayer.play_id._id%>"
+                />
+                <input
+                  type="hidden"
+                  name="whichoperation"
+                  id="<%= refplayer.play_id._id+obj.tournament_id._id%>"
+                />
+                <button
+                  class="button btn-link card-footer-item"
+                  onClick="which_one('<%= refplayer.play_id._id+obj.tournament_id._id%>')"
+                >
+                  Add
+                </button>
+
+                <button
+                  class="button btn-link card-footer-item"
+                  onClick="which_two('<%= refplayer.play_id._id+obj.tournament_id._id%>')"
+                >
+                  Reject
+                </button>
+              </form>
+            </div>
+          </div>
+          <% } else{} }) %>
+        </div>
+        <% }else{ }%> <% })%> <% }else { g=0; %>
+        <div class="section">
+          <h1 class="has-text-centered">NO requests</h1>
+        </div>
+        <%} if(cnt==actual_cnt && g) {%>
+
+        <div class="section">
+          <h1 class="has-text-centered">NO requests</h1>
+        </div>
+
+        <% }%>
+
+        <style>
+          .card-footer-item {
+            height: min-content;
+          }
+          #searchandinput {
+            visibility: hidden;
+          }
+          .card:hover {
+            transform: translate3D(0, -1px, 0) scale(1.03);
+          }
+          h1 {
+            font-size: xx-large;
+          }
+
+          @keyframes slideInLeft {
+            0% {
+              transform: translateY(-100%);
+            }
+            100% {
+              transform: translateY(0);
+            }
+          }
+          section {
+            animation: 1s ease-out 0s 1 slideInLeft;
+
+            padding: 40px;
+          }
+
+          .btn-link {
+            background: none;
+            border: none;
+
+            color: #3097d1;
+            font: inherit;
+          }
+          #searchandinput {
+            visibility: hidden;
+          }
+          #searchicon {
+            visibility: hidden;
+          }
+          #Searchone {
+            visibility: hidden;
+          }
+        </style>
+        <script>
+          function which_one(x) {
+            document.getElementById(x).value = "add";
+          }
+          function which_two(x) {
+            document.getElementById(x).value = "reject";
+          }
+        </script>
+      </section>
+    </body>
+    <%- include("../partials/footer") %>
+  </head>
+</html>

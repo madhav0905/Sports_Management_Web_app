@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const mongoose = require("mongoose");
+const { string } = require("joi");
 
 const tournamentschema = new mongoose.Schema({
   tname: { type: String, unique: true, required: true },
@@ -17,6 +18,9 @@ const tournamentschema = new mongoose.Schema({
   //team
   team_id: {
     type: [{ type: mongoose.Schema.Types.ObjectId, default: [], ref: "team" }],
+  },
+  pid: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, default: [], ref: "user" }],
   },
 });
 const userschema = new mongoose.Schema({
@@ -49,6 +53,18 @@ const userschema = new mongoose.Schema({
   teams_created_id: {
     type: [{ type: mongoose.Schema.Types.ObjectId, default: [], ref: "team" }],
   },
+  pstatus: [
+    {
+      tou_id: {
+        type: mongoose.Schema.Types.ObjectId,
+
+        ref: "tournament",
+      },
+      val: { type: String },
+    },
+  ],
+  bloodgroup: String,
+
   role: {
     type: String,
     default: "user",
@@ -84,7 +100,17 @@ const teamschema = new mongoose.Schema({
     ref: "user",
     required: true,
   },
+  ref_players: [
+    {
+      play_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
+      },
+      val: { type: String },
+    },
+  ],
 });
+
 const Tournament = new mongoose.model("tournament", tournamentschema);
 const User = new mongoose.model("user", userschema);
 const Team = new mongoose.model("team", teamschema);

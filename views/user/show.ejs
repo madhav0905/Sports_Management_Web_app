@@ -1,56 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Explore</title>
+    <title>Your Tournaments</title>
     <%- include("../partials/heading") %>
     <body>
       <%- include("../partials/user_nav")%>
       <section class="section">
-        <div class="columns is-multiline">
-          <% var tournaments=tournament.tournament_id; if(tournaments.length){%>
-          <% tournaments.forEach(obj => { var x =
-          moment(obj.start_date).format("YYYY-MM-DD"); var y =
-          moment(obj.end_date).format("YYYY-MM-DD");%>
-          <div class="column is-one-third">
-            <div class="card">
-              <div class="card-header">
-                <p class="card-header-title is-centered"><%= obj.tname%></p>
+        <% var is_single=0; var is_team=0; if(level){%> <%-
+        include("../partials/search_feature") %><%}%> <% var f=0;%> <%
+        if(teams_obj.length){ is_team=1;%>
+        <div class="container" id="teams">
+          <h1>Teams</h1>
+          <div class="columns is-multiline">
+            <% teams_obj.forEach(obj => { var x =
+            moment(obj.start_date).format("YYYY-MM-DD"); var y =
+            moment(obj.end_date).format("YYYY-MM-DD");%>
+            <div class="column is-one-third">
+              <div class="card">
+                <div class="card-header">
+                  <p class="card-header-title is-centered"><%= obj.tname%></p>
+                </div>
+                <div class="card-content">
+                  <p class="card-header-subtitle"><%= obj.sport%></p>
+
+                  <p>Number Of Teams : <%=obj.numofteams%></p>
+                  <p>Players Per Team: <%=obj.playerspteam%></p>
+                  <% var teamarray=obj.team_id;var pidd=pid; %> <% let found={};
+                  teamarray.forEach((team)=> {
+                  if(team.players_id.includes(pidd)) { found=team; } }); var
+                  status_team=found.ref_players.find(o=> o.play_id==pid); let
+                  ans="" ; if(!status_team) { ans="Registered"; } else {
+                  ans=status_team.val; } %>
+                  <p>Your Team:<%= found .team_name%></p>
+                  <p>Status: <%=ans%></p>
+                  <p>start_date :<%= x %></p>
+                  <p>end_date :<%= y %></p>
+                </div>
               </div>
-              <div class="card-content">
-                <p class="card-header-subtitle"><%= obj.sport%></p>
-                <% console.log(obj.team_id);if(obj.sport_type==="team") {%>
-                <p>Team</p>
-                <p>Number Of Teams : <%=obj.numofteams%></p>
-                <p>Players Per Team: <%=obj.playerspteam%></p>
-
-                <p>Your Team:<%=obj.team_id[0].team_name%></p>
-                <% }else {%>
-                <p>Single</p>
-
-                <p>Players : <%=obj.number_single_player%></p>
-
-                <% } %>
-
-                <p>start_date :<%= x %></p>
-                <p>end_date :<%= y %></p>
-              </div>
-              <footer class="card-footer">
-                <a
-                  href="/admin/tournament/<%= obj._id%>"
-                  class="card-footer-item"
-                  >Check Info</a
-                >
-                <a href="#" class="card-footer-item">Edit</a>
-                <a href="#" class="card-footer-item">Delete</a>
-              </footer>
             </div>
+            <%})%>
           </div>
-          <% })%> <% }else { %>
-          <div class="container">
-            <h1 class="has-text-centered">NO Tournaments</h1>
-          </div>
-          <%}%>
         </div>
+        <br />
+        <% }else { f=1; %> <%}%> <% if(single_obj.length){ is_single=1;%>
+
+        <div class="container" id="single">
+          <h1>Single</h1>
+          <div class="columns is-multiline">
+            <% single_obj.forEach(obj => { var x =
+            moment(obj.start_date).format("YYYY-MM-DD"); var y =
+            moment(obj.end_date).format("YYYY-MM-DD");%>
+            <div class="column is-one-third">
+              <div class="card">
+                <div class="card-header">
+                  <p class="card-header-title is-centered"><%= obj.tname%></p>
+                </div>
+                <div class="card-content">
+                  <p class="card-header-subtitle"><%= obj.sport%></p>
+                  <p>Players : <%=obj.number_single_player%></p>
+                  <p>Status: Registered</p>
+
+                  <p>start_date :<%= x %></p>
+                  <p>end_date :<%= y %></p>
+                </div>
+              </div>
+            </div>
+            <% })%>
+          </div>
+        </div>
+        <% }else { if(f==1){ %>
+        <div class="container">
+          <h1 class="has-text-centered">NO Tournaments</h1>
+        </div>
+        <%}}%>
       </section>
       <style>
         .card:hover {
@@ -59,8 +81,112 @@
         h1 {
           font-size: xx-large;
         }
+        @keyframes slideInLeft {
+          0% {
+            transform: translateY(-100%);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
+        section {
+          animation: 1s ease-out 0s 1 slideInLeft;
+
+          padding: 40px;
+        }
       </style>
-      <script></script>
+      <script>
+        let sin = "<%=is_single%>";
+        let tea = "<%= is_team%>";
+        sin = parseInt(sin);
+        tea = parseInt(tea);
+        if (!sin) {
+          document.getElementById("div_selector").options[1].disabled = true;
+        }
+        if (!tea) {
+          document.getElementById("div_selector").options[2].disabled = true;
+        }
+        if (!sin && !tea) {
+          document.getElementById("div_selector").options[0].disabled = true;
+        }
+        function div_show() {
+          let pointer_select = document.getElementById("div_selector");
+          let ans = pointer_select.value;
+          let sin = "<%=is_single%>";
+          let tea = "<%= is_team%>";
+          sin = parseInt(sin);
+          tea = parseInt(tea);
+          console.log(typeof sin + " " + tea);
+          if (ans === "all") {
+            if (tea) {
+              document.getElementById("teams").style.display = "block";
+            }
+            if (sin) {
+              document.getElementById("single").style.display = "block";
+            }
+          } else if (ans === "team") {
+            if (tea) {
+              console.log("asd");
+              document.getElementById("teams").style.display = "block";
+              if (sin) {
+                console.log("dsa");
+                document.getElementById("single").style.display = "none";
+              }
+            }
+          } else {
+            if (sin) {
+              document.getElementById("single").style.display = "block";
+            }
+            if (tea) {
+              document.getElementById("teams").style.display = "none";
+            }
+          }
+        }
+        function form_send() {
+          console.log(window.location.href);
+          const Url = new URL(window.location.href);
+          const start_val = document.getElementById("start").value;
+          console.log(start_val + " sad");
+          const end_val = document.getElementById("end").value;
+          if (new Date(start_val).getTime() > new Date(end_val).getTime()) {
+            console.log("hi");
+            document.getElementById("sm").innerText =
+              "End Date should be greater than start date";
+            return false;
+          }
+          if (start_val != "" && end_val != "") {
+            Url.searchParams.set("start_date", start_val);
+            Url.searchParams.set("end_date", end_val);
+            console.log(Url);
+            const ans = Url.pathname + Url.search;
+            console.log(Url.search);
+            console.log(ans);
+            //  document.getElementById("theform").action = ans;
+            window.location.href = ans;
+            return true;
+          } else if (start_val == "" && end_val == "") {
+            console.log("dsasd");
+            console.log(Url.searchParams.get("start_date"));
+            if (
+              Url.searchParams.get("start_date") &&
+              Url.searchParams.get("end_date")
+            ) {
+              Url.searchParams.delete("start_date");
+              Url.searchParams.delete("end_date");
+            }
+            const ans = Url.pathname + Url.search;
+
+            window.location.href = ans;
+            return true;
+          } else {
+            document.getElementById("sm").innerText =
+              "Both dates are to be filled;";
+            return false;
+          }
+          //console.log(document.getElementById("theform").action);
+        }
+      </script>
     </body>
+    <%- include("../partials/footer") %>
   </head>
 </html>

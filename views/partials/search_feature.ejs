@@ -1,0 +1,54 @@
+<div class="level">
+  <div class="level-left">
+    <div class="level-item"></div>
+  </div>
+  <div class="level-right">
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">Start Date</p>
+        <input
+          class="input"
+          type="date"
+          placeholder="start_date"
+          id="start"
+          value="<%=start%>"
+        />
+        <small></small>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">End Date</p>
+
+        <input
+          class="input"
+          type="date"
+          placeholder="start_date"
+          id="end"
+          value="<%=end%>"
+        />
+        <small id="sm" class="has-text-danger"></small>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div class="container has-text-centered">
+        <p class="heading" style="visibility: hidden">s</p>
+        <button class="button is-success" onclick="return form_send()">
+          Search
+        </button>
+      </div>
+    </div>
+    <div class="level-item is-mobile has-text-centered m-1">
+      <div class="field">
+        <label for="select_option " class="heading"> Choose:</label>
+        <div class="select level-item">
+          <select name="select_option" id="div_selector" onChange="div_show()">
+            <option value="all">All</option>
+            <option value="single">Single</option>
+            <option value="team">Team</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

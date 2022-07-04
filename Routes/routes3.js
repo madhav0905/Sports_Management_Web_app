@@ -272,10 +272,9 @@ router.get("/show", [auth, urlencoded], async (req, res) => {
   if (!given_pattern) {
     given_pattern = "";
   }
-  console.log(given_pattern);
+
   try {
     if (start_date != undefined && end_date != undefined) {
-      console.log();
       const user_obj = await User.findById(pid).populate({
         path: "tournament_id",
         match: {
@@ -310,7 +309,6 @@ router.get("/show", [auth, urlencoded], async (req, res) => {
         });
       }
     } else {
-      console.log("dsa");
       const user_obj = await User.findById(pid).populate({
         path: "tournament_id",
         match: { tname: new RegExp("^" + given_pattern, "i") },
@@ -453,6 +451,52 @@ router.post("/edituserprofile", [auth, urlencoded], async (req, res) => {
     const final = user_obj.save();
     if (final) {
       return res.redirect("/user/user_profile");
+    }
+  } catch (err) {
+    return res.render("error", { msg: [err] });
+  }
+});
+router.get("/edit_password", [auth, urlencoded], async (req, res) => {
+  return res.render("user/editpassword", {
+    given_pattern: "",
+    active_tab: 4,
+    msg: [],
+  });
+});
+router.post("/edituserpassword", [auth, urlencoded], async (req, res) => {
+  const uid = req.decoded;
+
+  try {
+    const user_obj = await User.findById(uid);
+
+    if (user_obj) {
+      const decrypted_password = await bcrypt.compare(
+        req.body.curr_password,
+        user_obj.password
+      );
+      if (decrypted_password) {
+        const salt = await bcrypt.genSalt(10);
+        const hashed = await bcrypt.hash(req.body.new_password1, salt);
+        user_obj.password = hashed;
+        const fin = await user_obj.save();
+        if (fin) {
+          return res.redirect("/logged/logout");
+        } else {
+          return res.render("user/editpassword", {
+            given_pattern: "",
+            active_tab: 4,
+            msg: ["try again"],
+          });
+        }
+      } else {
+        return res.render("user/editpassword", {
+          given_pattern: "",
+          active_tab: 4,
+          msg: ["Wrong current password"],
+        });
+      }
+    } else {
+      return res.render("error", { msg: ["wrong user"] });
     }
   } catch (err) {
     return res.render("error", { msg: [err] });

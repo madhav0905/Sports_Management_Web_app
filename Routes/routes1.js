@@ -90,7 +90,7 @@ router.post("/loggedin", [urlencoded], async (req, res) => {
         ms["password"],
         obj.password
       );
-      console.log(decrypted_password);
+
       try {
         if (decrypted_password) {
           const token = jwt.sign(

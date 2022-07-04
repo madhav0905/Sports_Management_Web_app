@@ -11,8 +11,20 @@
   <div class="column is-three-fifths is-offset-one-fifth m-2">
     <div class="box m-4">
      
-
-        <h1 class="title has-text-centered">Edit Profile</h1>
+<div class="level">
+  <div class="level-left">
+    <div class="level-item"></div>
+     <div class="level-item">
+    <div class="container">
+        <h1 class="title has-text-centered ">Edit Profile</h1>
+        </div>
+        </div>
+  </div>
+ 
+        <div class="level-right">
+          <a class="button level-item is-info" href="/user/edit_password">Edit Password</a>
+        </div>
+        </div>
         <form action="/user/edituserprofile" id="myform" method="post" onsubmit="return validate()">
 <input type="hidden" id="bg" value="<%=user_obj.bloodgroup%>">
 <div class="field">

@@ -90,6 +90,7 @@ router.post("/loggedin", [urlencoded], async (req, res) => {
         ms["password"],
         obj.password
       );
+      console.log(decrypted_password);
       try {
         if (decrypted_password) {
           const token = jwt.sign(
@@ -118,6 +119,7 @@ router.post("/loggedin", [urlencoded], async (req, res) => {
       return res.render("login", { msg: ["Wrong Email"] });
     }
   } catch (err) {
+    console.log(err);
     return res.render("login", { msg: ["Try again"] });
   }
 });

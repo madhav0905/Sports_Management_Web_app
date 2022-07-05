@@ -99,8 +99,26 @@ router.post("/store", [auth, urlencoded], async (req, res) => {
     req.body.numofteams = parseInt(req.body.numofteams);
     req.body.playerspteam = parseInt(req.body.playerspteam);
   }
+
+  var temp = moment().subtract(1, "days").format("YYYY-MM-DD");
+
+  const schema = Joi.object({
+    tname: Joi.string().min(5).required(),
+    sport: Joi.string().min(5).required(),
+    sport_type: Joi.string().min(5).required(),
+    playerspteam: Joi.number().integer().required().min(0).max(20),
+    numofteams: Joi.number().integer().required().min(0).max(20),
+    number_single_player: Joi.number().integer().required().min(0).max(20),
+    start_date: Joi.date().min(temp).required(),
+    end_date: Joi.date().min(Joi.ref("start_date")).required(),
+  });
+  const check = validate_joi(schema, req.body);
+  if (check.error) {
+    return res.render("error", { msg: [check.error] });
+  }
   req.body.start_date = new Date(req.body.start_date);
   req.body.end_date = new Date(req.body.end_date);
+  return res.send("ho");
   const E = req.body.end_date;
   const S = req.body.start_date;
   try {
@@ -217,6 +235,7 @@ router.get("/edit_tournament/:tid", [auth, urlencoded], async (req, res) => {
 
 router.post("/store/edit_tournament", [auth, urlencoded], async (req, res) => {
   ///return res.send(req.body);
+
   const tid = req.body.tour_id;
   try {
     const check_tname = await Tournament.find({
@@ -288,6 +307,21 @@ router.post("/store/edit_tournament", [auth, urlencoded], async (req, res) => {
 });
 router.post("/update_status", [auth, urlencoded], async (req, res) => {
   const teamid = req.body.teamid;
+
+  const schema = Joi.object({
+    tname: Joi.string().min(5).required(),
+    sport: Joi.string().min(5).required(),
+    sport_type: Joi.string().min(5).required(),
+    playerspteam: Joi.number().integer().required().min(0).max(20),
+    numofteams: Joi.number().integer().required().min(0).max(20),
+    number_single_player: Joi.number().integer().required().min(0).max(20),
+    start_date: Joi.date().min(temp).required(),
+    end_date: Joi.date().min(Joi.ref("start_date")).required(),
+  });
+  const check = validate_joi(schema, req.body);
+  if (check.error) {
+    return res.render("error", { msg: [check.error] });
+  }
   try {
     const team_obj = await Team.findById(teamid).populate(["tournament_id"]);
     if (team_obj) {

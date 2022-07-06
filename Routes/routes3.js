@@ -108,27 +108,47 @@ router.get("/tournament/:id", [auth, urlencoded], async (req, res) => {
 
   try {
     const tour_obj = await Tournament.findById(tid).populate("team_id");
-
-    if (tour_obj) {
-      return res.render("user/register_tournament", {
-        tournaments: tour_obj,
-        player: req.decoded,
-        given_pattern: "",
-        pid: req.decoded,
-        moment: moment,
-      });
+    const user_obj = await User.findById(req.decoded);
+    if (tour_obj && user_obj) {
+      if (user_obj.tournament_id.includes(tid)) {
+        return res.send("Already Registered");
+      }
+      if (tour_obj.status_tournament === "Active") {
+        return res.render("user/register_tournament", {
+          tournaments: tour_obj,
+          player: req.decoded,
+          given_pattern: "",
+          pid: req.decoded,
+          moment: moment,
+        });
+      } else {
+        return res.send("no active torunament");
+      }
     } else {
-      return res.send("no tournament you tester");
+      return res.send("No Tournament ");
     }
   } catch (err) {
     console.log("err time");
-    return res.send(err);
+    return res.render("error", { msg: ["NO TOURNAMENT"] });
   }
 });
 router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
   const tid = req.body.tid;
   const pid = req.body.pid;
   const select_type = req.body.select_type;
+  /// return res.send(req.body);
+  const schema = Joi.object({
+    tid: Joi.objectId().required(),
+    pid: Joi.objectId().required(),
+    select_type: Joi.string().required(),
+    req_num: Joi.number().integer().min(0).required(),
+    chooseteam: Joi.objectId(),
+    team_name: Joi.string().min(0),
+  });
+  const check = validate_joi(schema, req.body);
+  if (check.error) {
+    return res.render("error", { msg: [check.error] });
+  }
   try {
     const user_obj = await User.findById(pid);
 
@@ -165,6 +185,15 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
         }
       } else if (select_type == "choose") {
         //existing team
+
+        const schem = Joi.object({
+          chooseteam: Joi.objectId().required(),
+        });
+        const check = validate_joi(schem, _.pick(req.body, ["chooseteam"]));
+        if (check.error) {
+          console.log("sdadsadsadsa");
+          return res.render("error", { msg: [check.error] });
+        }
         const which_team = req.body.chooseteam;
         const data = await Team.findById(which_team);
         if (data) {
@@ -217,6 +246,17 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
         //find team
       } else {
         //create team
+        const schea = Joi.object({
+          team_name: Joi.string().min(4).required(),
+          req_num: Joi.number().integer().min(1).required(),
+        });
+        const check = validate_joi(
+          schea,
+          _.pick(req.body, ["team_name", "req_num"])
+        );
+        if (check.error) {
+          return res.render("error", { msg: [check.error] });
+        }
         const team_name = req.body.team_name;
         const req_num = req.body.req_num;
         const new_team = new Team({
@@ -356,6 +396,18 @@ router.get("/join_request", [auth, urlencoded], async (req, res) => {
   });
 });
 router.post("/acceptrequest", [auth, urlencoded], async (req, res) => {
+  const schema = Joi.object({
+    tid: Joi.objectId().required(),
+    team_id: Joi.objectId().required(),
+    whichoperation: Joi.string().required().valid("add", "reject"),
+
+    created_pid: Joi.objectId().required(),
+    user_pid: Joi.objectId().required(),
+  });
+  const check = validate_joi(schema, req.body);
+  if (check.error) {
+    return res.render("error", { msg: [check.error] });
+  }
   const tour_id = req.body.tid;
   const team_id = req.body.team_id;
   const created_user_id = req.body.created_pid;
@@ -442,6 +494,18 @@ router.get("/user_profile", [auth, urlencoded], async (req, res) => {
 });
 router.post("/edituserprofile", [auth, urlencoded], async (req, res) => {
   const userid = req.decoded;
+  const schema = Joi.object({
+    name: Joi.string().required(),
+    address: Joi.string().required(),
+    age: Joi.number().integer().min(2).required(),
+    bloodgroup: Joi.string()
+      .required()
+      .valid("A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"),
+  });
+  const check = validate_joi(schema, req.body);
+  if (check.error) {
+    return res.render("error", { msg: [check.error] });
+  }
   try {
     const user_obj = await User.findById(userid);
     user_obj.name = req.body.name;
@@ -466,6 +530,15 @@ router.get("/edit_password", [auth, urlencoded], async (req, res) => {
 router.post("/edituserpassword", [auth, urlencoded], async (req, res) => {
   const uid = req.decoded;
 
+  const schema = Joi.object({
+    curr_password: Joi.string().required().min(5),
+    new_password1: Joi.string().min(5).invalid(Joi.ref("curr_password")),
+    new_password2: Joi.string().min(5).valid(Joi.ref("new_password1")),
+  });
+  const check = validate_joi(schema, req.body);
+  if (check.error) {
+    return res.render("error", { msg: [check.error] });
+  }
   try {
     const user_obj = await User.findById(uid);
 

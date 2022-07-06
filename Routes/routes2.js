@@ -16,6 +16,7 @@ const bodyparser = require("body-parser"); //middleware
 const urlencoded = bodyparser.urlencoded({ extended: false });
 const validate_joi = require("../validate/validate_register");
 const { User, Team, Tournament } = require("../Schemas/model");
+const { clear } = require("console");
 
 require("dotenv").config();
 
@@ -95,17 +96,18 @@ router.post("/store", [auth, urlencoded], async (req, res) => {
     req.body.playerspteam = 0;
     req.body.number_single_player = parseInt(req.body.number_single_player);
   } else {
-    req.body.numer_single_player = 0;
+    console.log("john cen");
+    req.body.number_single_player = 0;
     req.body.numofteams = parseInt(req.body.numofteams);
     req.body.playerspteam = parseInt(req.body.playerspteam);
   }
-
+  console.log(req.body.number_single_player);
   var temp = moment().subtract(1, "days").format("YYYY-MM-DD");
 
   const schema = Joi.object({
     tname: Joi.string().min(5).required(),
     sport: Joi.string().min(5).required(),
-    sport_type: Joi.string().min(5).required(),
+    sport_type: Joi.string().required(),
     playerspteam: Joi.number().integer().required().min(0).max(20),
     numofteams: Joi.number().integer().required().min(0).max(20),
     number_single_player: Joi.number().integer().required().min(0).max(20),
@@ -118,7 +120,7 @@ router.post("/store", [auth, urlencoded], async (req, res) => {
   }
   req.body.start_date = new Date(req.body.start_date);
   req.body.end_date = new Date(req.body.end_date);
-  return res.send("ho");
+
   const E = req.body.end_date;
   const S = req.body.start_date;
   try {
@@ -236,6 +238,22 @@ router.get("/edit_tournament/:tid", [auth, urlencoded], async (req, res) => {
 router.post("/store/edit_tournament", [auth, urlencoded], async (req, res) => {
   ///return res.send(req.body);
 
+  var temp = moment().subtract(1, "days").format("YYYY-MM-DD");
+  const schema = Joi.object({
+    tour_id: Joi.objectId().required(),
+    tname: Joi.string().min(5).required(),
+    sport_type: Joi.string().required(),
+    playerspteam: Joi.number().integer().min(0).max(20),
+    numofteams: Joi.number().integer().min(0).max(20),
+    number_single_player: Joi.number().integer().min(0).max(20),
+    start_date: Joi.date().min(temp).required(),
+    status: Joi.string().required(),
+    end_date: Joi.date().min(Joi.ref("start_date")).required(),
+  });
+  const check = validate_joi(schema, req.body);
+  if (check.error) {
+    return res.render("error", { msg: [check.error] });
+  }
   const tid = req.body.tour_id;
   try {
     const check_tname = await Tournament.find({
@@ -307,19 +325,14 @@ router.post("/store/edit_tournament", [auth, urlencoded], async (req, res) => {
 });
 router.post("/update_status", [auth, urlencoded], async (req, res) => {
   const teamid = req.body.teamid;
-
+  ///return res.send(req.body);
   const schema = Joi.object({
-    tname: Joi.string().min(5).required(),
-    sport: Joi.string().min(5).required(),
-    sport_type: Joi.string().min(5).required(),
-    playerspteam: Joi.number().integer().required().min(0).max(20),
-    numofteams: Joi.number().integer().required().min(0).max(20),
-    number_single_player: Joi.number().integer().required().min(0).max(20),
-    start_date: Joi.date().min(temp).required(),
-    end_date: Joi.date().min(Joi.ref("start_date")).required(),
+    teamid: Joi.objectId().required(),
+    ans: Joi.string().required(),
   });
   const check = validate_joi(schema, req.body);
   if (check.error) {
+    console.log("sdadsadsadsa");
     return res.render("error", { msg: [check.error] });
   }
   try {
@@ -331,12 +344,19 @@ router.post("/update_status", [auth, urlencoded], async (req, res) => {
         const user_obj = await User.findById(o);
         if (user_obj) {
           let past_obj = -1;
+          console.log(user_obj.pstatus);
           for (var i = 0; i < user_obj.pstatus.length; i++) {
+            if (i == 3) {
+              console.log(user_obj.pstatus[i].tou_id.equals(tour_id));
+              console.log(user_obj.pstatus[i].tou_id + " " + tour_id);
+            }
             if (user_obj.pstatus[i].tou_id.equals(tour_id)) {
+              console.log("sdads");
               past_obj = i;
+              break;
             }
           }
-
+          console.log(past_obj);
           if (past_obj > -1) {
             user_obj.pstatus[past_obj].val = req.body.ans;
           } else {
@@ -365,7 +385,17 @@ router.post("/update_status", [auth, urlencoded], async (req, res) => {
   }
 });
 router.post("/single_update_status", [auth, urlencoded], async (req, res) => {
-  /// return res.send(req.body);
+  ///return res.send(req.body);
+
+  const schema = Joi.object({
+    tid: Joi.objectId().required(),
+    pid: Joi.array().items(Joi.objectId()).required(),
+    status: Joi.array().items(Joi.string()).required(),
+  });
+  const check = validate_joi(schema, req.body);
+  if (check.error) {
+    return res.render("error", { msg: [check.error] });
+  }
   const tid = req.body.tid;
   const pid_array = req.body.pid;
   const status_array = req.body.status;
@@ -395,7 +425,13 @@ router.post("/single_update_status", [auth, urlencoded], async (req, res) => {
 });
 router.post("/delete_tournament", [auth, urlencoded], async (req, res) => {
   const tidd = req.body.tid;
-
+  const schema = Joi.object({
+    tid: Joi.objectId().required(),
+  });
+  const check = validate_joi(schema, req.body);
+  if (check.error) {
+    return res.render("error", { msg: [check.error] });
+  }
   try {
     const tour_obj = await Tournament.findById(tidd);
 

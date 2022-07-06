@@ -199,18 +199,32 @@ x[parseInt(active_tab)-1].classList.add("is-tab");
 x[parseInt(active_tab)-1].classList.add("is-active");
 function searchtour()
 {
-  console.log(window.location.href);
+ 
           const Url = new URL(window.location.href);
           const tour_val = document.getElementById("a").value;
-     
+            if(tour_val=="" && Url.search)
+          {
+              
+          window.location.href = Url.pathname;
+          }
+       if (
+    tour_val.trim().length > 2 &&
+    /^[a-zA-Z ]{2,30}$/.test(tour_val.trim())
+  )
+  {
+
+  
           Url.searchParams.set("search", tour_val);
      
-          console.log(Url);
+        
           const ans = Url.pathname + Url.search;
-          console.log(Url.search);
-          console.log(ans);
-          //  document.getElementById("theform").action = ans;
+        
           window.location.href = ans;
+  }
+  else
+  {
+    return false;
+  }
 }
 
 </script>

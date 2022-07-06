@@ -1,6 +1,5 @@
 const Joi = require("joi");
-
-module.exports = function (schema,ms) {
-
+Joi.objectId = require("joi-objectid")(Joi);
+module.exports = function (schema, ms) {
   return schema.validate(ms);
 };

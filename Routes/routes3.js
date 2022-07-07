@@ -96,6 +96,7 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
       });
     }
   } catch (err) {
+    console.log(err);
     return res.render("error", { msg: ["Please Try Again"] });
   }
 

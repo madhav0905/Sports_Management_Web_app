@@ -8,6 +8,7 @@ app.use(
     secret: "secret",
   })
 );
+const cors = require("cors");
 const bcrypt = require("bcrypt");
 const path = require("path");
 const _ = require("lodash");
@@ -35,6 +36,13 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/auth", router1);
 app.use("/admin", router2);
 app.use("/user", router3);
+
+var corsOptions = {
+  origin: "http://localhost:9009", //frontend url
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.get("/", (req, res) => {
   return res.redirect("/auth/login");
 });
@@ -44,6 +52,7 @@ app.get("/logged/logout", [urlencoded], (req, res) => {
     domain: "localhost",
     path: "/",
   });
+
   res.redirect("/");
 });
 app.get("*", (req, res) => {

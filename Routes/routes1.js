@@ -17,6 +17,11 @@ const urlencoded = bodyparser.urlencoded({ extended: false });
 const validate_joi = require("../validate/validate_register");
 const { User, Team, Tournament } = require("../Schemas/model");
 const auth = require("../Middleware/auth");
+const axios = require("axios");
+const { route } = require("./routes3");
+
+router.use(coo("random"));
+let refreshTokens = [];
 require("dotenv").config();
 router.get("/login", (req, res) => {
   res.render("login", { msg: [] });
@@ -25,7 +30,57 @@ router.get("/login", (req, res) => {
 router.get("/register", (req, res) => {
   res.render("register", { msg: [] });
 });
+router.post("/token", [urlencoded], async (req, res) => {
+  const refreshToken = req.body["cookie"]; // If token is not provided, send error message
 
+  if (!refreshToken) {
+    console.log("dsdsa");
+    return res.redirect("/");
+  }
+
+  // If token does not exist, send error message
+  if (!refreshTokens.includes(refreshToken)) {
+    console.log("dsad");
+    return res.redirect("/");
+  }
+
+  try {
+    const ans = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+    const { _id, role } = ans;
+    const accessToken = jwt.sign(
+      { _id: ans._id, role: ans.role },
+      process.env.secret,
+      {
+        expiresIn: "50s",
+      }
+    );
+
+    console.log(req.cookies.access_token);
+    res.cookie("access_token", "", {
+      expires: new Date(0),
+      domain: "localhost",
+      path: "/",
+    });
+    console.log(req.cookies.access_token);
+
+    return res.send({
+      nextUrl: req.body["base"] + req.body["url"],
+      jwtthing: accessToken,
+    });
+    console.log(accessToken);
+  } catch (error) {
+    console.log(error);
+    return res.redirect("/");
+    res.status(403).json({
+      errors: [
+        {
+          msg: "Invalid token",
+        },
+      ],
+    });
+  }
+});
 router.post("/store", [urlencoded], async (req, res) => {
   //validate
 
@@ -95,14 +150,26 @@ router.post("/loggedin", [urlencoded], async (req, res) => {
         if (decrypted_password) {
           const token = jwt.sign(
             { _id: obj._id, role: obj.role },
-            process.env.secret
+            process.env.secret,
+            { expiresIn: "10s" }
           );
-
+          const refreshToken = jwt.sign(
+            { _id: obj._id, role: obj.role },
+            process.env.REFRESH_TOKEN_SECRET,
+            {
+              expiresIn: "10m",
+            }
+          );
           res.cookie("access_token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+          });
+          res.cookie("refresh_token", refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
           });
-
+          refreshTokens.push(refreshToken);
           if (obj.role === "admin") {
             return res.redirect("/admin/explore");
           } else {

@@ -1,4 +1,10 @@
 const jwt = require("jsonwebtoken");
+
+let a = "";
+function changetoken(x) {
+  a = x;
+}
+module.exports.ax = changetoken;
 const axios = require("axios");
 
 const axioskInstance = axios.create({
@@ -7,11 +13,8 @@ const axioskInstance = axios.create({
 });
 axios.defaults.withCredentials = true;
 module.exports.auth = async function (req, res, next) {
-  const t = req.cookies.access_token;
-
-  if (!t) return res.status(403).render("access_denied");
   try {
-    const dec = jwt.verify(t, process.env.secret);
+    const dec = jwt.verify(a, process.env.secret);
 
     if (dec) {
       if (req.baseUrl === "/admin" && dec.role != "admin") {
@@ -25,7 +28,6 @@ module.exports.auth = async function (req, res, next) {
       req.decoded_role = dec.role;
     }
   } catch (err) {
-    console.log(err.name);
     try {
       if (err.name == "TokenExpiredError") {
         const resp = await axioskInstance.post(
@@ -42,9 +44,7 @@ module.exports.auth = async function (req, res, next) {
             domain: "localhost",
             path: "/",
           });
-          res.cookie("access_token", resp.data.jwtthing, {
-            httpOnly: true,
-          });
+
           const dec = jwt.verify(resp.data.jwtthing, process.env.secret);
           if (dec) {
             if (req.baseUrl === "/admin" && dec.role != "admin") {
@@ -56,19 +56,20 @@ module.exports.auth = async function (req, res, next) {
 
             req.decoded = dec._id;
             req.decoded_role = dec.role;
+            changetoken(resp.data.jwtthing);
           }
         }
       } else {
         console.log(err);
+        changetoken("");
         return res.redirect("/");
       }
     } catch (err) {
       console.log(err);
+      changetoken("");
       return res.redirect("/");
     }
-
-    //return res.redirect("/");
+    console.log(err);
   }
-
   next();
 };

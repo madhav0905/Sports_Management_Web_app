@@ -19,7 +19,7 @@ const { User, Team, Tournament } = require("../Schemas/model");
 const auth = require("../Middleware/auth");
 const axios = require("axios");
 const { route } = require("./routes3");
-
+let a_t = "s";
 router.use(coo("random"));
 let refreshTokens = [];
 require("dotenv").config();
@@ -52,7 +52,7 @@ router.post("/token", [urlencoded], async (req, res) => {
       { _id: ans._id, role: ans.role },
       process.env.secret,
       {
-        expiresIn: "50s",
+        expiresIn: "10s",
       }
     );
 
@@ -160,11 +160,14 @@ router.post("/loggedin", [urlencoded], async (req, res) => {
               expiresIn: "10m",
             }
           );
+          a_t = token;
+
           res.cookie("access_token", token, {
             httpOnly: true,
             secure: true,
             sameSite: "none",
           });
+
           res.cookie("refresh_token", refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
@@ -191,4 +194,4 @@ router.post("/loggedin", [urlencoded], async (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports.router1 = router;

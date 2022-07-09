@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+
 const session = require("express-session");
 app.use(
   session({
@@ -20,7 +21,7 @@ const mongoose = require("mongoose");
 const coo = require("cookie-parser");
 app.use(coo("random"));
 require("dotenv").config();
-const router1 = require("./Routes/routes1");
+const { router1 } = require("./Routes/routes1");
 const router2 = require("./Routes/routes2");
 const router3 = require("./Routes/routes3");
 //
@@ -48,6 +49,11 @@ app.get("/", (req, res) => {
 });
 app.get("/logged/logout", [urlencoded], (req, res) => {
   res.cookie("access_token", "", {
+    expires: new Date(0),
+    domain: "localhost",
+    path: "/",
+  });
+  res.cookie("refresh_token", "", {
     expires: new Date(0),
     domain: "localhost",
     path: "/",

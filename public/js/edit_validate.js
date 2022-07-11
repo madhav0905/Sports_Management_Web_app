@@ -16,7 +16,6 @@ if (select_pointer.value === "single") {
   num_teams = form.elements["numofteams"].value;
   num_playerspteam = form.elements["playerspteam"].value;
 }
-console.log(single_numm + " " + num_teams + " " + num_playerspteam);
 
 let y = -1;
 function checkInput() {

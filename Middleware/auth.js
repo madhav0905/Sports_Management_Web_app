@@ -44,7 +44,9 @@ module.exports.auth = async function (req, res, next) {
           });
           res.cookie("access_token", resp.data.jwtthing, {
             httpOnly: true,
+            secure: true,
           });
+          console.log("refreshed");
           const dec = jwt.verify(resp.data.jwtthing, process.env.secret);
           if (dec) {
             if (req.baseUrl === "/admin" && dec.role != "admin") {

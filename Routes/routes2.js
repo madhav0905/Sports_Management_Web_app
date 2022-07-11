@@ -99,17 +99,16 @@ router.get("/create", [auth, urlencoded], async (req, res) => {
   });
 });
 router.post("/store", [auth, urlencoded], async (req, res) => {
-  if (req.body.numofteams == "") {
+  if (req.body.numofteams == "" || req.body.numofteams == 0) {
     req.body.numofteams = 0;
     req.body.playerspteam = 0;
     req.body.number_single_player = parseInt(req.body.number_single_player);
   } else {
-    console.log("john cen");
     req.body.number_single_player = 0;
     req.body.numofteams = parseInt(req.body.numofteams);
     req.body.playerspteam = parseInt(req.body.playerspteam);
   }
-  console.log(req.body.number_single_player);
+
   var temp = moment().subtract(1, "days").format("YYYY-MM-DD");
 
   const schema = Joi.object({
@@ -142,6 +141,7 @@ router.post("/store", [auth, urlencoded], async (req, res) => {
         moment(all_records[0].start_date).format("YYYY-MM-DD") +
         " to " +
         moment(all_records[0].end_date).format("YYYY-MM-DD");
+
       return res.render("admins/create_tournament", {
         res_data: req.body,
         msg: [errmsg],
@@ -150,7 +150,7 @@ router.post("/store", [auth, urlencoded], async (req, res) => {
         active_tab: 2,
       });
     } else {
-      const other_obj = await Tournament.find({ tname: req.body.tname });
+      const other_obj = await Tournament.find({ tname: req.body.tname.trim() });
       if (other_obj.length) {
         return res.render("admins/create_tournament", {
           msg: [
@@ -270,7 +270,7 @@ router.post("/store/edit_tournament", [auth, urlencoded], async (req, res) => {
       tname: req.body.tname.trim(),
       _id: { $nin: [tid] },
     });
-
+    //return res.send(check_tname);
     const tour_obj = await Tournament.findById(tid);
     if (check_tname.length) {
       return res.render("admins/edit_tournament", {
@@ -310,7 +310,7 @@ router.post("/store/edit_tournament", [auth, urlencoded], async (req, res) => {
       });
     }
     if (tour_obj) {
-      tour_obj.tname = req.body.tname;
+      tour_obj.tname = req.body.tname.trim();
       if (tour_obj.sport_type === "single") {
         tour_obj.number_single_player = req.body.number_single_player;
       } else {
@@ -342,7 +342,6 @@ router.post("/update_status", [auth, urlencoded], async (req, res) => {
   });
   const check = validate_joi(schema, req.body);
   if (check.error) {
-    console.log("sdadsadsadsa");
     return res.render("error", { msg: [check.error] });
   }
   try {
@@ -354,19 +353,14 @@ router.post("/update_status", [auth, urlencoded], async (req, res) => {
         const user_obj = await User.findById(o);
         if (user_obj) {
           let past_obj = -1;
-          console.log(user_obj.pstatus);
+
           for (var i = 0; i < user_obj.pstatus.length; i++) {
-            if (i == 3) {
-              console.log(user_obj.pstatus[i].tou_id.equals(tour_id));
-              console.log(user_obj.pstatus[i].tou_id + " " + tour_id);
-            }
             if (user_obj.pstatus[i].tou_id.equals(tour_id)) {
-              console.log("sdads");
               past_obj = i;
               break;
             }
           }
-          console.log(past_obj);
+
           if (past_obj > -1) {
             user_obj.pstatus[past_obj].val = req.body.ans;
           } else {
@@ -447,6 +441,45 @@ router.post("/delete_tournament", [auth, urlencoded], async (req, res) => {
 
     if (tour_obj) {
       tour_obj.status_tournament = "Cancelled";
+      //do something
+      if (tour_obj.sport_type == "single") {
+        var i = 0;
+        for (i = 0; i < tour_obj.pid.length; i++) {
+          let user_obj = await User.findById(tour_obj.pid[i]);
+          let doc = user_obj.pstatus.find((o) => o.tou_id.equals(tidd));
+          if (doc) {
+            doc.val = "Cancelled";
+          } else {
+            return res.render("error", {
+              msg: ["Server busy please try again"],
+            });
+          }
+
+          let r = await user_obj.save();
+          if (r) {
+          } else {
+            return res.render("error", {
+              msg: ["Server busy please try again"],
+            });
+            break;
+          }
+        }
+      } else {
+        var i = 0;
+        for (i = 0; i < tour_obj.team_id.length; i++) {
+          let team_obj = await Team.findById(tour_obj.team_id[i]);
+          team_obj.status = "Cancelled";
+          let r = await team_obj.save();
+          if (r) {
+          } else {
+            return res.render("error", {
+              msg: ["Server busy please try again"],
+            });
+            break;
+          }
+        }
+      }
+
       const final_res = await tour_obj.save();
       if (final_res) {
         return res.redirect("/admin/explore");

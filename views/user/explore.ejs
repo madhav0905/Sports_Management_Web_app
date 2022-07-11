@@ -96,6 +96,14 @@
       </div>
       </section>
       <style>
+        #sp 
+        {
+          color: red;
+        }
+          #sm 
+        {
+          color: red;
+        }
         .card:hover {
           transform: translate3D(0, -1px, 0) scale(1.03);
         }
@@ -177,6 +185,22 @@
               "End Date should be greater than start date";
             return false;
           }
+          else
+          {
+            
+            document.getElementById("sm").innerText ="";
+          }
+           if (new Date(start_val).getTime() < new Date().getTime()) {
+       
+            document.getElementById("sp").innerText =
+              " start date should be greater than Present Day";
+            return false;
+           }
+           else
+           {
+            
+            document.getElementById("sp").innerText =""
+           }
           if (start_val != "" && end_val != "") {
             Url.searchParams.set("start_date", start_val);
             Url.searchParams.set("end_date", end_val);

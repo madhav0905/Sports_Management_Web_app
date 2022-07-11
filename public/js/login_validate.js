@@ -3,7 +3,6 @@ let form = document.querySelector("form");
 
 var inputs = document.getElementsByTagName("input");
 for (i = 0; i < inputs.length; i++) {
-  console.log("inside for");
   inputs[i].onkeyup = checkInput;
 }
 let y;

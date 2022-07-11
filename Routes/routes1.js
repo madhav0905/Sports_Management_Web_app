@@ -34,13 +34,16 @@ router.post("/token", [urlencoded], async (req, res) => {
   const refreshToken = req.body["cookie"]; // If token is not provided, send error message
 
   if (!refreshToken) {
-    console.log("dsdsa");
+    res.cookie("refresh_token", "", {
+      expires: new Date(0),
+      domain: "localhost",
+      path: "/",
+    });
     return res.redirect("/");
   }
 
   // If token does not exist, send error message
   if (!refreshTokens.includes(refreshToken)) {
-    console.log("dsad");
     return res.redirect("/");
   }
 
@@ -56,21 +59,24 @@ router.post("/token", [urlencoded], async (req, res) => {
       }
     );
 
-    console.log(req.cookies.access_token);
     res.cookie("access_token", "", {
       expires: new Date(0),
       domain: "localhost",
       path: "/",
     });
-    console.log(req.cookies.access_token);
 
     return res.send({
       nextUrl: req.body["base"] + req.body["url"],
       jwtthing: accessToken,
     });
-    console.log(accessToken);
   } catch (error) {
     console.log(error);
+
+    res.cookie("refresh_token", "", {
+      expires: new Date(0),
+      domain: "localhost",
+      path: "/",
+    });
     return res.redirect("/");
     res.status(403).json({
       errors: [
@@ -160,7 +166,6 @@ router.post("/loggedin", [urlencoded], async (req, res) => {
               expiresIn: "10m",
             }
           );
-          a_t = token;
 
           res.cookie("access_token", token, {
             httpOnly: true,

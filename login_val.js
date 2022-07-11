@@ -1,5 +1,4 @@
 function validate() {
-  console.log("this is from function");
   let point_to_p = document.getElementById("err_dis");
   let form_pointer = document.getElementById("myform");
   var check_username = form_pointer.elements["user_name"].value;
@@ -7,7 +6,7 @@ function validate() {
   var check_name = form_pointer.elements["name"].value;
   var check_address = form_pointer.elements["Address"].value;
   var check_age = form_pointer.elements["age"].value;
-  console.log(check_username);
+
   if (
     /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
       form_pointer.elements["user_name"].value

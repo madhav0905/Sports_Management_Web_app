@@ -130,7 +130,7 @@ router.get("/tournament/:id", [auth, urlencoded], async (req, res) => {
       return res.send("No Tournament ");
     }
   } catch (err) {
-    console.log("err time");
+    console.log(err);
     return res.render("error", { msg: ["NO TOURNAMENT"] });
   }
 });
@@ -193,7 +193,6 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
         });
         const check = validate_joi(schem, _.pick(req.body, ["chooseteam"]));
         if (check.error) {
-          console.log("sdadsadsadsa");
           return res.render("error", { msg: [check.error] });
         }
         const which_team = req.body.chooseteam;
@@ -353,7 +352,7 @@ router.get("/show", [auth, urlencoded], async (req, res) => {
         ///  return res.send(user_obj.tournament_id);
         return res.render("user/show", {
           active_tab: 2,
-
+          user_obj: user_obj,
           single_obj: single_obj,
           teams_obj: teams_obj,
           given_pattern: given_pattern,
@@ -381,7 +380,7 @@ router.get("/show", [auth, urlencoded], async (req, res) => {
         ///  return res.send(user_obj.tournament_id);
         return res.render("user/show", {
           active_tab: 2,
-
+          user_obj: user_obj,
           single_obj: single_obj,
           teams_obj: teams_obj,
           given_pattern: given_pattern,
@@ -456,6 +455,11 @@ router.post("/acceptrequest", [auth, urlencoded], async (req, res) => {
           team_obj.ref_players[ans] = { play_id: user_id, val: "rejected" };
         }
         team_obj.vacancies++;
+
+        //have to change
+        if (team_obj.status == "Closed") {
+          team_obj.status = "Active";
+        }
         const ind = team_obj.players_id.indexOf(user_id);
 
         if (ind > -1) {

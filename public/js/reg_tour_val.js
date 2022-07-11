@@ -41,7 +41,7 @@ if (options.length == 0) {
 }
 
 var can_create_team = document.getElementById("forstatus").value;
-console.log(can_create_team);
+
 if (can_create_team == 0) {
   let pointer_select = document.getElementById("select_type");
   let pointer_chooseteam = document.getElementById("chooseteam");

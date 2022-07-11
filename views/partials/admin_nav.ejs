@@ -50,7 +50,7 @@
                 <span class="icon is-left"><i class="fa fa-search"></i></span>
                 
                   
-                  <button onclick="searchtour()" class="button is-info is-italic">
+                  <button onclick="searchtour()" class="button is-info is-italic" id="btn">
                     Search
                   </button>
         
@@ -150,6 +150,18 @@ margin-right: 0%;
 
 </style>
 <script>
+  var input = document.getElementById("a");
+
+// Execute a function when the user presses a key on the keyboard
+input.addEventListener("keypress", function(event) {
+  // If the user presses the "Enter" key on the keyboard
+  if (event.key === "Enter") {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Trigger the button element with a click
+    document.getElementById("btn").click();
+  }
+});
   document.addEventListener('DOMContentLoaded', function () {
 
 // Get all "navbar-burger" elements
@@ -201,7 +213,6 @@ x[parseInt(active_tab)-1].classList.add("is-active");
 function searchtour()
 {
   
-  console.log(window.location.href);
           const Url = new URL(window.location.href);
           const tour_val = document.getElementById("a").value;
           if(tour_val=="" && Url.search)

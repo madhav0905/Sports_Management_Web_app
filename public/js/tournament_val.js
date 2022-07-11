@@ -9,7 +9,7 @@ function toggle_in_out() {
     // let check_num_teams = form.elements["numofteams"];
     // let check_num_playerspteam = form.elements["players_pteam"];
     pointer_for_single.style.display = "block";
-    check_single_num.value = "";
+    // check_single_num.value = "";
     pointer_for_single.required = true;
     // check_num_teams.value = 0;
     pointer_for_team.style.display = "none";
@@ -33,8 +33,8 @@ function toggle_in_out() {
     pointer_for_single.required = false;
     let check_num_teams = form.elements["numofteams"];
     let check_num_playerspteam = form.elements["playerspteam"];
-    check_num_teams.value = "";
-    check_num_playerspteam.value = "";
+    // check_num_teams.value = "";
+    // check_num_playerspteam.value = "";
   }
 }
 let form = document.getElementById("myform");

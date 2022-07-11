@@ -24,7 +24,7 @@ router.use(coo("random"));
 let refreshTokens = [];
 require("dotenv").config();
 router.get("/login", (req, res) => {
-  res.render("login", { msg: [] });
+  res.render("login", { msg: [], dat: { user_name: "", password: "" } });
 });
 
 router.get("/register", (req, res) => {
@@ -180,17 +180,20 @@ router.post("/loggedin", [urlencoded], async (req, res) => {
             return res.redirect("/user/explore");
           }
         } else {
-          return res.render("login", { msg: ["Incorrect Password"] });
+          return res.render("login", {
+            msg: ["Incorrect Password"],
+            dat: req.body,
+          });
         }
       } catch (err) {
-        return res.render("login", { msg: [err] });
+        return res.render("login", { msg: [err], dat: req.body });
       }
     } else {
-      return res.render("login", { msg: ["Wrong Email"] });
+      return res.render("login", { msg: ["Wrong Email"], dat: req.body });
     }
   } catch (err) {
     console.log(err);
-    return res.render("login", { msg: ["Try again"] });
+    return res.render("login", { msg: ["Try again"], dat: req.body });
   }
 });
 

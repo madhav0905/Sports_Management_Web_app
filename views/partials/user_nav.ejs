@@ -202,13 +202,15 @@ function searchtour()
  
           const Url = new URL(window.location.href);
           const tour_val = document.getElementById("a").value;
-            if(tour_val=="" && Url.search)
+       
+ 
+            if(tour_val=="" && Url.search!="")
           {
-              
-          window.location.href = Url.pathname;
+       Url.searchParams.delete("search");
+          window.location.href = Url.pathname+Url.search;
           }
        if (
-    tour_val.trim().length > 2 &&
+    tour_val.trim().length > 1 &&
     /^[a-zA-Z ]{2,30}$/.test(tour_val.trim())
   )
   {
@@ -218,11 +220,12 @@ function searchtour()
      
         
           const ans = Url.pathname + Url.search;
-        
+   
           window.location.href = ans;
   }
   else
   {
+
     return false;
   }
 }

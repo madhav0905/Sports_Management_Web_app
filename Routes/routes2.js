@@ -84,6 +84,14 @@ router.get("/explore", [auth, urlencoded], async (req, res) => {
 });
 router.get("/create", [auth, urlencoded], async (req, res) => {
   return res.render("admins/create_tournament", {
+    res_data: {
+      tname: "",
+      sport: "",
+      sport_type: " ",
+      playerspteam: " ",
+      numofteams: " ",
+      number_single_player: " ",
+    },
     msg: [],
     given_pattern: "",
     moment: moment,
@@ -135,6 +143,7 @@ router.post("/store", [auth, urlencoded], async (req, res) => {
         " to " +
         moment(all_records[0].end_date).format("YYYY-MM-DD");
       return res.render("admins/create_tournament", {
+        res_data: req.body,
         msg: [errmsg],
         given_pattern: "",
         moment: moment,
@@ -147,6 +156,7 @@ router.post("/store", [auth, urlencoded], async (req, res) => {
           msg: [
             "There is already A Tournament with the same name Please change the name",
           ],
+          res_data: req.body,
           given_pattern: "",
           moment: moment,
           active_tab: 2,

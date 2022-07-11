@@ -121,6 +121,7 @@ router.get("/tournament/:id", [auth, urlencoded], async (req, res) => {
           given_pattern: "",
           pid: req.decoded,
           moment: moment,
+          er: [],
         });
       } else {
         return res.send("no active torunament");
@@ -259,6 +260,8 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
           return res.render("error", { msg: [check.error] });
         }
         const team_name = req.body.team_name;
+        const team_there = await Team.findOne({ team_name: team_name });
+
         const req_num = req.body.req_num;
         const new_team = new Team({
           team_name: team_name,
@@ -269,8 +272,20 @@ router.post("/reg_tour_store", [auth, urlencoded], async (req, res) => {
           created_player_id: pid,
         });
         try {
-          const tour_obj = await Tournament.findById(tid);
+          const tour_obj = await Tournament.findById(tid).populate("team_id");
           if (tour_obj) {
+            if (team_there) {
+              return res.render("user/register_tournament", {
+                tn: team_name,
+                tournaments: tour_obj,
+                player: req.decoded,
+                given_pattern: "",
+                pid: req.decoded,
+                moment: moment,
+                er: ["there is already with the same team name"],
+              });
+            }
+
             if (tour_obj.numofteams - tour_obj.curr_num_teams > 0) {
               const result = await new_team.save();
               if (result) {

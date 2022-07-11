@@ -11,11 +11,11 @@ function toggle_in_out() {
     pointer_for_single.style.display = "block";
     // check_single_num.value = "";
     pointer_for_single.required = true;
-    pointer_for_team.min = 0;
+    //  pointer_for_team.min = 0;
     // check_num_teams.value = 0;
     pointer_for_single.min = 2;
     pointer_for_team.style.display = "none";
-    pointer_for_team.min = 0;
+    // pointer_for_team.min = 0;
     // check_num_playerspteam.value = 0;
     pointer_for_team_players.style.display = "none";
     pointer_for_team.required = false;
@@ -27,9 +27,9 @@ function toggle_in_out() {
     //check_single_num.value = 0;
     pointer_for_single.style.display = "none";
     pointer_for_team.style.display = "block";
-    pointer_for_single.min = 0;
-    pointer_for_team.min = 2;
-    pointer_for_team_players.min = 2;
+    // pointer_for_single.min = 0;
+    // pointer_for_team.min = 2;
+    //pointer_for_team_players.min = 2;
     pointer_for_team.required = true;
     pointer_for_team_players.required = true;
 
@@ -103,7 +103,11 @@ function checkInput() {
   if (select_pointer.value === "single") {
     let single_num = parseInt(check_single_num.value, 10);
 
-    if (isNaN(single_num) || !/^[1-9]\d{0,1}$/.test(check_single_num.value)) {
+    if (
+      isNaN(single_num) ||
+      !/^[1-9]\d{0,1}$/.test(check_single_num.value) ||
+      single_num <= 1
+    ) {
       setError(check_single_num, "Players should be from 2 to 100");
       x++;
     } else {

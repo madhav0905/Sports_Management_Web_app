@@ -99,7 +99,11 @@ router.get("/create", [auth, urlencoded], async (req, res) => {
   });
 });
 router.post("/store", [auth, urlencoded], async (req, res) => {
-  if (req.body.numofteams == "" || req.body.numofteams == 0) {
+  if (
+    req.body.sport_type == "single" ||
+    req.body.numofteams == "" ||
+    req.body.numofteams == 0
+  ) {
     req.body.numofteams = 0;
     req.body.playerspteam = 0;
     req.body.number_single_player = parseInt(req.body.number_single_player);

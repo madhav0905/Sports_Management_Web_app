@@ -55,7 +55,7 @@ router.post("/token", [urlencoded], async (req, res) => {
       { _id: ans._id, role: ans.role },
       process.env.secret,
       {
-        expiresIn: "10s",
+        expiresIn: "4m",
       }
     );
 
@@ -157,13 +157,13 @@ router.post("/loggedin", [urlencoded], async (req, res) => {
           const token = jwt.sign(
             { _id: obj._id, role: obj.role },
             process.env.secret,
-            { expiresIn: "10s" }
+            { expiresIn: "4m" }
           );
           const refreshToken = jwt.sign(
             { _id: obj._id, role: obj.role },
             process.env.REFRESH_TOKEN_SECRET,
             {
-              expiresIn: "10m",
+              expiresIn: "15m",
             }
           );
 

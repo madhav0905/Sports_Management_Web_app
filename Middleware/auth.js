@@ -8,12 +8,13 @@ const axioskInstance = axios.create({
 axios.defaults.withCredentials = true;
 module.exports.auth = async function (req, res, next) {
   const t = req.cookies.access_token;
-
+  const r = req.cookies.refresh_token;
   if (!t) return res.status(403).render("access_denied");
+  if (!r) return res.status(403).render("access_denied");
   try {
     const dec = jwt.verify(t, process.env.secret);
-
-    if (dec) {
+    const ref_dec = jwt.verify(r, process.env.REFRESH_TOKEN_SECRET);
+    if (dec && ref_dec) {
       if (req.baseUrl === "/admin" && dec.role != "admin") {
         return res.status(403).render("access_denied");
       }

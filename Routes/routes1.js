@@ -19,12 +19,42 @@ const { User, Team, Tournament } = require("../Schemas/model");
 const auth = require("../Middleware/auth");
 const axios = require("axios");
 const { route } = require("./routes3");
-let a_t = "s";
+
 router.use(coo("random"));
 let refreshTokens = [];
 require("dotenv").config();
-router.get("/login", (req, res) => {
-  res.render("login", { msg: [], dat: { user_name: "", password: "" } });
+router.get("/login", [urlencoded], (req, res) => {
+  const t = req.cookies.access_token;
+  const r = req.cookies.refresh_token;
+  if (!t)
+    return res.render("login", {
+      msg: [],
+      dat: { user_name: "", password: "" },
+    });
+  if (!r)
+    return res.render("login", {
+      msg: [],
+      dat: { user_name: "", password: "" },
+    });
+  try {
+    const dec = jwt.verify(t, process.env.secret);
+    const ref_dec = jwt.verify(r, process.env.REFRESH_TOKEN_SECRET);
+    if (dec && ref_dec) {
+      req.decoded = dec._id;
+      req.decoded_role = dec.role;
+
+      return res.redirect("/" + dec.role + "/explore");
+    } else {
+      res.render("login", { msg: [], dat: { user_name: "", password: "" } });
+    }
+  } catch (err) {
+    console.log(err);
+    res.render("login", {
+      msg: [],
+      dat: { user_name: "", password: "" },
+    });
+  }
+  //  res.render("login", { msg: [], dat: { user_name: "", password: "" } });
 });
 
 router.get("/register", (req, res) => {
